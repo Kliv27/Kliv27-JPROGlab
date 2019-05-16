@@ -3,5 +3,6 @@
 
 int main(int agrc, char *argv[])
 {
+	char z;
 	return 0;
 }
