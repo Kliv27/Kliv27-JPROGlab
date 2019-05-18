@@ -35,19 +35,107 @@ Nigdy nie "commituj" pliku wykonywalnego ani pliku 000commit.txt zawieraj¹cego o
 #include <stdio.h>
 #include <stdlib.h>
 
+#define x_ekran 61
+#define y_ekran 61
+#define x_margines 19
+#define y_margines 61
+#define liczba_zasad_1 9
+#define liczba_zasad_2 18
+#define stand_margin_pustki 20
 
-void zwieksz_rozmiar_planszy(int u, int l, int r, int d); // planowane funkcje
-void zmniejsz_rozmiar_planszy(); // obcina planszê zostawiaj¹c margines pustki równy marginesowi dodawanemu. Wywo³ywaæ np. co 100 kroków.
-char TT(int x, int y);
+void wczytaj_zasady(char ZSD[], char *awaria);
+char** wczytaj_uklad(int *xT, int *yT, char *awaria);
+void zapisz_uklad(char **T, int xT, int yT, char *awaria);
+void zwolnij_pamiec(char **T, int xT, int yT);
+void wypisz_komunikat_o_awarii(int awaria);
+void wypisz_komunikat_zakonczenia();
+
+char** zwieksz_rozmiar_planszy(int *xT, int *yT, int *x0, int *y0, char *awaria, int u, int l, int r, int d); // cztery ostatnie argumenty musza byc dlugosciami
+char** zmniejsz_rozmiar_planszy(int *xT, int *yT, int *x0, int *y0, char *awaria); // obcina planszê zostawiaj¹c margines pustki równy marginesowi dodawanemu. Wywo³ywaæ np. co 100 kroków.
+char** zmniejsz_rozmiar_planszy_maksymalnie(int *xT, int *yT, int *x0, int *y0, char *awaria); // nie zostawia marginesu pustki, te trzy funkcje na pewno nie maja zmienic polozenia kursora
+char TT(char **T, int xT, int yT, int px, int py); // odczytuje element tablicy lub pustkê poza ni¹
 
 int main(int agrc, char *argv[])
 {
-	char **T, komunikacja, awaria=0;
+	char **T=NULL, komunikacja, awaria=0;
 	int xT, yT, x0, y0, xkur, ykur; // wymiary tablicy, po³o¿enie punktu (0,0) wzglêdem tablicy, po³o¿enie kursora
 	char ZSD[18];
-	
-	
-	
-	
+	wczytaj_zasady(ZSD,&awaria);
+	if (awaria==0)
+	{
+		T=wczytaj_uklad(&xT,&yT,&awaria);
+		if (awaria==0)
+		{
+			x0=xT/2;
+			y0=yT/2;
+			xkur=x0; // ustawienie kursora na srodek
+			ykur=y0; // muszê pamiêtaæ o sytuacji, gdy kursor wykracza poza tablicê - ma to byc dozwolone i obslugiwane
+			
+			
+			
+			// operacje na ukladzie, edytor
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			zapisz_uklad(T,xT,yT,&awaria);
+			if (awaria!=0)
+			{
+				wypisz_komunikat_o_awarii(awaria);
+			}
+			zwolnij_pamiec(T,xT,yT);
+		}
+		else
+		{
+			wypisz_komunikat_o_awarii(awaria);
+		}
+	}
+	else
+	{
+		wypisz_komunikat_o_awarii(awaria);
+	}
+	wypisz_komunikat_zakonczenia();
 	return 0;
+}
+
+void wczytaj_zasady(char ZSD[], char *awaria)
+{
+	
+}
+
+char** wczytaj_uklad(int *xT, int *yT, char *awaria)
+{
+	char **D=NULL;
+	
+	
+	
+	
+	
+	
+	return D;
+}
+
+void zapisz_uklad(char **T, int xT, int yT, char *awaria)
+{
+	
+}
+
+void zwolnij_pamiec(char **T, int xT, int yT)
+{
+	
+}
+
+void wypisz_komunikat_o_awarii(int awaria)
+{
+	
+}
+
+void wypisz_komunikat_zakonczenia()
+{
+	
 }
