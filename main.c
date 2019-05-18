@@ -1,8 +1,6 @@
 /*
 PLAN REALIZACJI PROJEKTU
 Niewykonane:
-	SprawdŸ czy polskie znaki dzia³aj¹ pod innym systemem operacyjnym.
-	Dodaj polskie znaki do programu.
 	Opisz program ogólnie w pliku readme.txt. Okreœl specyfikacjê zadania i dane wejœciowe.
 	Dodaj nazwy plików wynikowych i plików danych wejœciowych do readmme.txt i opisz standard ich zawartoœci.
 	Œwiat tych automatów komórkowych ma byæ nieskoñczony. Mo¿na te¿ dodaæ mo¿liwoœæ tworzenia torusa.
@@ -22,6 +20,11 @@ Niewykonane:
 	Warunkowo zdefiniuj dzielnik, jeœli funkcje sleep() wymagaj¹ innych jednostek.
 Wykonane:
 	Rezygnujê z wieloœci kolorów.
+	SprawdŸ czy polskie znaki dzia³aj¹ pod innym systemem operacyjnym. Wyniki eksperymentu:
+		na Windowsie wszysko dzia³aja
+		w paiza.io nie dzia³a
+		na Linuxie - napisany program testowy z polskimi znakami wykaza³, ¿e znaki z mojego programu tworzone t¹ metod¹ nie zadzia³aj¹ na Linuxie -
+	Wobec tego rezygnujê z polskich znaków w programie.
 
 
 Nigdy nie "commituj" pliku wykonywalnego ani pliku 000commit.txt zawieraj¹cego opis commita.
