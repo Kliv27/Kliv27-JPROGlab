@@ -60,7 +60,7 @@ char TT(char **T, int xT, int yT, int px, int py); // odczytuje element tablicy 
 int main(int agrc, char *argv[])
 {
 	char **T=NULL, komunikacja, awaria=0;
-	int xT, yT, x0, y0, xkur, ykur; // wymiary tablicy, po這瞠nie punktu (0,0) wzgl璠em tablicy, po這瞠nie kursora
+	int xT=0, yT=0, x0=0, y0=0, xkur=0, ykur=0; // wymiary tablicy, po這瞠nie punktu (0,0) wzgl璠em tablicy, po這瞠nie kursora
 	char ZSD[18]; // zasady od a0 do d8
 	wczytaj_zasady(ZSD,&awaria);
 	if (awaria==0)
@@ -108,6 +108,12 @@ int main(int agrc, char *argv[])
 void wczytaj_zasady(char ZSD[], char *awaria)
 {
 	int i=0;
+	while (i<liczba_zasad_2)
+	{
+		ZSD[i]=0;
+		i++;
+	}
+	i=0;
 	FILE *plik_zasad=NULL;
 	char znaki[3]={48,48,48};
 	plik_zasad=fopen("zasady.txt","r");
