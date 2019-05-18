@@ -25,6 +25,8 @@ Wykonane:
 		w paiza.io nie dzia³a
 		na Linuxie - napisany program testowy z polskimi znakami wykaza³, ¿e znaki z mojego programu tworzone t¹ metod¹ nie zadzia³aj¹ na Linuxie -
 	Wobec tego rezygnujê z polskich znaków w programie.
+	Sprawdzono wymiary (w liczbie znaków) dostêpne w konsoli do wyœwietlania pracy programu.
+	Wyniki: Programu konsolowe w Windows: maksymalna szerokoœæ 80, wysokoœæ jest wiêksza. Parametry te s¹ niezale¿ne od systemu a od wyœwietlanej konsoli. Mog¹ byæ zatem wiêksze.
 
 
 Nigdy nie "commituj" pliku wykonywalnego ani pliku 000commit.txt zawieraj¹cego opis commita.
