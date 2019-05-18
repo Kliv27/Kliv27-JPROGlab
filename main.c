@@ -1,6 +1,7 @@
 /*
 PLAN REALIZACJI PROJEKTU
 Niewykonane:
+	Sprawdziæ, czy system("cls"); dzia³a pod Linuxem
 	Œwiat tych automatów komórkowych ma byæ nieskoñczony. Zastanowiê siê, czy dodaæ torus.
 	pamiêtaj: d0 musi zasze wynosiæ 0, aby pusta przestrzeñ nie ulega³a samowype³nieniu.
 	Do przyjmowania poleceñ od u¿ytkownika w trakcie dzia³ania programu wszêdzie u¿ywaj getch() z conio.h
@@ -44,6 +45,7 @@ Nigdy nie "commituj" pliku wykonywalnego ani pliku 000commit.txt zawieraj¹cego o
 #define stand_margin_pustki 20
 
 void wczytaj_zasady(char ZSD[], char *awaria);
+int jestzeroosiem(char znak);
 char** wczytaj_uklad(int *xT, int *yT, char *awaria);
 void zapisz_uklad(char **T, int xT, int yT, char *awaria);
 void zwolnij_pamiec(char **T, int xT, int yT);
@@ -59,7 +61,7 @@ int main(int agrc, char *argv[])
 {
 	char **T=NULL, komunikacja, awaria=0;
 	int xT, yT, x0, y0, xkur, ykur; // wymiary tablicy, po³o¿enie punktu (0,0) wzglêdem tablicy, po³o¿enie kursora
-	char ZSD[18];
+	char ZSD[18]; // zasady od a0 do d8
 	wczytaj_zasady(ZSD,&awaria);
 	if (awaria==0)
 	{
@@ -105,7 +107,36 @@ int main(int agrc, char *argv[])
 
 void wczytaj_zasady(char ZSD[], char *awaria)
 {
-	
+	int i=0;
+	FILE *plik_zasad=NULL;
+	char znaki[3]={48,48,48};
+	plik_zasad=fopen("zasady.txt","r");
+	if (plik_zasad!=NULL)
+	{
+		do
+		{
+			znak[0]=znak[1];
+			znak[1]=znak[2];
+			znak[2]=fgetc(plik_zasad);
+			if ((znak[0]==':') && (znak[1]==' ') && (i<liczba_zasad_2) && (jestzeroosiem(znak[2])))
+			{
+				ZSD[i]=znak[2]-48;
+				i++;
+			}				
+		} while (znak[2]!=EOF);
+		ZSD[9]=0; // d0 = 0
+		fclose(plik_zasad);
+	}
+	else
+	{
+		awaria=131;
+	}
+}
+
+int jestzeroosiem(char znak)
+{
+	if ((znak>=48) && (znak<=57)) return 1;
+	else return 0;
 }
 
 char** wczytaj_uklad(int *xT, int *yT, char *awaria)
@@ -132,7 +163,18 @@ void zwolnij_pamiec(char **T, int xT, int yT)
 
 void wypisz_komunikat_o_awarii(int awaria)
 {
-	
+	system("cls");
+	switch (awaria)
+	{
+		case 131:
+		{
+			fprintf(stderr, "Otwarcie pliku z zasadami nie powiodlo sie. Program zostanie zamkniety.\n");
+		} break;
+		default:
+		{
+			fprintf(stderr, "Wystapil nieznany blad. Program zostanie zamkniety.\n");
+		}
+	}
 }
 
 void wypisz_komunikat_zakonczenia()
