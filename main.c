@@ -35,8 +35,6 @@ Nigdy nie "commituj" pliku wykonywalnego ani pliku 000commit.txt zawieraj¹cego o
 #include <stdio.h>
 #include <stdlib.h>
 
-char **T;
-int Tx, Ty, x0, y0;
 
 void zwieksz_rozmiar_planszy(int u, int l, int r, int d); // planowane funkcje
 void zmniejsz_rozmiar_planszy(); // obcina planszê zostawiaj¹c margines pustki równy marginesowi dodawanemu. Wywo³ywaæ np. co 100 kroków.
@@ -44,5 +42,12 @@ char TT(int x, int y);
 
 int main(int agrc, char *argv[])
 {
+	char **T, komunikacja, awaria=0;
+	int xT, yT, x0, y0, xkur, ykur; // wymiary tablicy, po³o¿enie punktu (0,0) wzglêdem tablicy, po³o¿enie kursora
+	char ZSD[18];
+	
+	
+	
+	
 	return 0;
 }

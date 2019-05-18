@@ -69,8 +69,7 @@ Przyk³adowa zawartoœæ pliku a.txt przedstawiona jest poni¿ej, miêdzy znakami ---
 out.txt - plik zawieraj¹cy wynik dzia³ania programu po jego zakoñczeniu. Ma identyczn¹ budowê jak plik a.txt.
 
 EDYTOR
-Stan uk³adu wyœwietlany jest w ekranie o wymiarach 61 x 61. Ekran ten mo¿na przesuwaæ po nieskoñczonym œwiecie (z ograniczeniem do mo¿liwoœci obliczeniowych komputera). Po jego prawej stronie znajduje siê margines z informacjami.
-Na samym œrodku ekranu znajduje siê kursor. S³u¿y on do zmieniania stanu komórki, na który wskazuje. Jest to mo¿liwe wy³¹cznie w czasie, gdy symulacja jest zatrzymana.
+Stan uk³adu wyœwietlany jest w ekranie o wymiarach 61 x 61. Ekran ten mo¿na przesuwaæ po nieskoñczonym œwiecie (z ograniczeniem do mo¿liwoœci obliczeniowych komputera). Po jego prawej stronie znajduje siê margines z informacjami. Na samym œrodku ekranu znajduje siê kursor. S³u¿y on do zmieniania stanu komórki, na który wskazuje. Jest to mo¿liwe wy³¹cznie w czasie, gdy symulacja jest zatrzymana.
 Oznaczenia wystêpuj¹ce na planszy:
 ' ' - oznacza martw¹ komórkê;
 'O' - oznacza ¿yw¹ komórkê;
@@ -84,4 +83,4 @@ przycisk SPACJA - wykonanie jednego kroku czasowego;
 przycisk ENTER - przejœcie miêdzy stanem EDYCJI (pauzy) a stanem ci¹g³ego automatycznego wykonywania kroków przez program;
 przycisk T - zmiana dystansu, na jaki przemieszcza siê kursor;
 przycisk Y - zmiana stanu komórki pod kursorem w trybie edycji;
-przycisk U - zmiana d³ugoœci kroku czasowego;
+przycisk U - zmiana minimalnej d³ugoœci kroku czasowego;
