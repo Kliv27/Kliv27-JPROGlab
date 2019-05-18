@@ -1,20 +1,9 @@
 /*
 PLAN REALIZACJI PROJEKTU
 Niewykonane:
-	Opisz program ogólnie w pliku readme.txt. Okreœl specyfikacjê zadania i dane wejœciowe.
-	Dodaj nazwy plików wynikowych i plików danych wejœciowych do readmme.txt i opisz standard ich zawartoœci.
-	Œwiat tych automatów komórkowych ma byæ nieskoñczony. Mo¿na te¿ dodaæ mo¿liwoœæ tworzenia torusa.
+	Niech bêd¹ równie¿ pocz¹tkowymi zawartoœciami plików wejœciowych.
+	Œwiat tych automatów komórkowych ma byæ nieskoñczony. Zastanowiê siê, czy dodaæ torus.
 	pamiêtaj: d0 musi zasze wynosiæ 0, aby pusta przestrzeñ nie ulega³a samowype³nieniu.
-	W przyk³adach poka¿ zasady gry w ¿ycie Conway'a oraz Gosper Glider Gun. Niech bêd¹ równie¿ pocz¹tkowymi zawartoœciami plików wejœciowych.
-	Dodaj instrukcjê u¿ycia programu - nie wewn¹trz jego samego.
-	WASD / strza³ki - zmiana perspektywy, np. o 20 pól, przycisk zmiany wielkoœci kroku przesuwania - 1, 10, 20 .. 60 z wyœwietleniem aktualnej wartoœci na marginesie
-	Dodaj przycisk zmiany d³ugoœci jednego kroku z wyœwietlaniem na marginesie. Mo¿na te¿ wyœwietlaæ liczebnoœæ populacji, po³o¿enie kursora itp.
-	U¿ytkownik mo¿e zmieniaæ minimaln¹ d³ugoœæ kroku czasowego w ENTER-auto, SPACJA-krok.
-	Do pliku readme.txt dodaj wyjaœnienia planowanych oznaczeñ komórek w programie:
-	' ' - 
-	'O' - 
-	'^' - 
-	'X' - 
 	Do przyjmowania poleceñ od u¿ytkownika w trakcie dzia³ania programu wszêdzie u¿ywaj getch() z conio.h
 	Linux - https://linux.die.net/man/3/sleep / Windows - sleep() windows.h, ifdef itp. 
 	Warunkowo zdefiniuj dzielnik, jeœli funkcje sleep() wymagaj¹ innych jednostek.
@@ -27,6 +16,18 @@ Wykonane:
 	Wobec tego rezygnujê z polskich znaków w programie.
 	Sprawdzono wymiary (w liczbie znaków) dostêpne w konsoli do wyœwietlania pracy programu.
 	Wyniki: Programu konsolowe w Windows: maksymalna szerokoœæ 80, wysokoœæ jest wiêksza. Parametry te s¹ niezale¿ne od systemu a od wyœwietlanej konsoli. Mog¹ byæ zatem wiêksze.
+	Opisz program ogólnie w pliku readme.txt. Okreœl specyfikacjê zadania i dane wejœciowe.
+	Dodaj nazwy plików wynikowych i plików danych wejœciowych do readme.txt i opisz standard ich zawartoœci.
+	Do pliku readme.txt dodaj wyjaœnienia planowanych oznaczeñ komórek w programie:
+	' ' - 
+	'O' - 
+	'^' - 
+	'X' - 
+	Dodaj instrukcjê u¿ycia programu - nie wewn¹trz jego samego.
+	WASD / strza³ki - zmiana perspektywy, np. o 20 pól, przycisk zmiany wielkoœci kroku przesuwania - 1, 10, 20 .. 60 z wyœwietleniem aktualnej wartoœci na marginesie
+	U¿ytkownik mo¿e zmieniaæ minimaln¹ d³ugoœæ kroku czasowego w ENTER-auto, SPACJA-krok.
+	Dodaj (do instrukcji) przycisk zmiany d³ugoœci jednego kroku z wyœwietlaniem na marginesie. Mo¿na te¿ wyœwietlaæ liczebnoœæ populacji, po³o¿enie kursora itp.
+	W przyk³adach poka¿ zasady gry w ¿ycie Conway'a oraz Gosper Glider Gun. 
 
 
 Nigdy nie "commituj" pliku wykonywalnego ani pliku 000commit.txt zawieraj¹cego opis commita.
