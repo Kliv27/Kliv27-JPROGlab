@@ -45,7 +45,6 @@ Nigdy nie "commituj" pliku wykonywalnego ani pliku 000commit.txt zawieraj¹cego o
 #define stand_margin_pustki 20
 
 void wczytaj_zasady(char ZSD[], char *awaria);
-int jestzeroosiem(char znak);
 char** wczytaj_uklad(int *xT, int *yT, char *awaria);
 void zapisz_uklad(char **T, int xT, int yT, char *awaria);
 void zwolnij_pamiec(char **T, int xT, int yT);
@@ -124,36 +123,49 @@ void wczytaj_zasady(char ZSD[], char *awaria)
 			znak[0]=znak[1];
 			znak[1]=znak[2];
 			znak[2]=fgetc(plik_zasad);
-			if ((znak[0]==':') && (znak[1]==' ') && (i<liczba_zasad_2) && (jestzeroosiem(znak[2])))
+			if ((znak[0]==':') && (znak[1]==' ') && (i<liczba_zasad_2) && ((znak[2]==48) || (znak[2]==49)))
 			{
 				ZSD[i]=znak[2]-48;
 				i++;
 			}				
-		} while (znak[2]!=EOF);
+		} while (znak[2]!=EOF && !feof(plik_zasad)); // podwójne zabezpieczenie
 		ZSD[9]=0; // d0 = 0
 		fclose(plik_zasad);
 	}
 	else
 	{
-		awaria=131;
+		*awaria=31;
 	}
-}
-
-int jestzeroosiem(char znak)
-{
-	if ((znak>=48) && (znak<=57)) return 1;
-	else return 0;
 }
 
 char** wczytaj_uklad(int *xT, int *yT, char *awaria)
 {
 	char **D=NULL;
+	int dlugosc_linii=0, dlugosc_pliku=0;
+	FILE *plik_danych=NULL;
+	char znak;
+	plik_danych=fopen("a.txt","r");
+	if (plik_danych!=NULL)
+	{
+		petladokoncaliniiczy4849
+		fseek(plik_danych,0,SEEK_SET);
+		petladokoncaplikuczyEOF
+		fseek(plik_danych,0,SEEK_SET); // kursor czytaj¹cy na poczatek pliku
+		
+		xT=
+		yT=
 	
 	
+		// dynamiczna alokacja
+		petladokoncaplikuczyta
+		imozeawariabyczprzydzialupam
 	
 	
-	
-	
+	}
+	else
+	{
+		*awaria=32;
+	}
 	return D;
 }
 
@@ -172,9 +184,13 @@ void wypisz_komunikat_o_awarii(int awaria)
 	system("cls");
 	switch (awaria)
 	{
-		case 131:
+		case 31:
 		{
 			fprintf(stderr, "Otwarcie pliku z zasadami nie powiodlo sie. Program zostanie zamkniety.\n");
+		} break;
+		case 32:
+		{
+			fprintf(stderr, "Otwarcie pliku ze stanem poczatkowym ukladu komorek nie powiodlo sie. Program zostanie zamkniety.\n");
 		} break;
 		default:
 		{
