@@ -23,7 +23,6 @@ Niewykonane:
 Wykonane:
 
 
-
 Nigdy nie "commituj" pliku wykonywalnego ani pliku 000commit.txt zawieraj¹cego opis commita.
 */
 
