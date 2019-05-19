@@ -1,12 +1,22 @@
 /*
 PLAN REALIZACJI PROJEKTU
 Niewykonane:
+	Sprawdziæ wszystko to, co mam do tej pory (przejrzeæ kod).
 	Sprawdziæ, czy system("cls"); dzia³a pod Linuxem
 	Œwiat tych automatów komórkowych ma byæ nieskoñczony. Zastanowiê siê, czy dodaæ torus.
 	pamiêtaj: d0 musi zasze wynosiæ 0, aby pusta przestrzeñ nie ulega³a samowype³nieniu.
 	Do przyjmowania poleceñ od u¿ytkownika w trakcie dzia³ania programu wszêdzie u¿ywaj getch() z conio.h
 	Linux - https://linux.die.net/man/3/sleep / Windows - sleep() windows.h, ifdef itp. 
 	Warunkowo zdefiniuj dzielnik, jeœli funkcje sleep() wymagaj¹ innych jednostek.
+	
+	*(T+2) --> *(*(T+2)+0) ; *(*(T+2)+1) ; *(*(T+2)+2)
+	*(T+1) --> *(*(T+1)+0) ; *(*(T+1)+1) ; *(*(T+1)+2)
+	*(T+0) --> *(*(T+0)+0) ; *(*(T+0)+1) ; *(*(T+0)+2)
+	/\
+	|
+	|
+	T		*(*(T+y)+x)
+	
 Wykonane:
 	Rezygnujê z wieloœci kolorów.
 	SprawdŸ czy polskie znaki dzia³aj¹ pod innym systemem operacyjnym. Wyniki eksperymentu:
@@ -50,6 +60,8 @@ void zapisz_uklad(char **T, int xT, int yT, char *awaria);
 void zwolnij_pamiec(char **T, int xT, int yT);
 void wypisz_komunikat_o_awarii(int awaria);
 void wypisz_komunikat_zakonczenia();
+
+int jest4849(char znak);
 
 char** zwieksz_rozmiar_planszy(int *xT, int *yT, int *x0, int *y0, char *awaria, int u, int l, int r, int d); // cztery ostatnie argumenty musza byc dlugosciami
 char** zmniejsz_rozmiar_planszy(int *xT, int *yT, int *x0, int *y0, char *awaria); // obcina planszê zostawiaj¹c margines pustki równy marginesowi dodawanemu. Wywo³ywaæ np. co 100 kroków.
@@ -114,7 +126,7 @@ void wczytaj_zasady(char ZSD[], char *awaria)
 	}
 	i=0;
 	FILE *plik_zasad=NULL;
-	char znaki[3]={48,48,48};
+	char znak[3]={48,48,48};
 	plik_zasad=fopen("zasady.txt","r");
 	if (plik_zasad!=NULL)
 	{
@@ -123,12 +135,12 @@ void wczytaj_zasady(char ZSD[], char *awaria)
 			znak[0]=znak[1];
 			znak[1]=znak[2];
 			znak[2]=fgetc(plik_zasad);
-			if ((znak[0]==':') && (znak[1]==' ') && (i<liczba_zasad_2) && ((znak[2]==48) || (znak[2]==49)))
+			if ((znak[0]==':') && (znak[1]==' ') && (i<liczba_zasad_2) && (jest4849(znak[2])))
 			{
 				ZSD[i]=znak[2]-48;
 				i++;
 			}				
-		} while (znak[2]!=EOF && !feof(plik_zasad)); // podwójne zabezpieczenie
+		} while (znak[2]!=EOF && (!feof(plik_zasad))); // podwójne zabezpieczenie
 		ZSD[9]=0; // d0 = 0
 		fclose(plik_zasad);
 	}
@@ -141,26 +153,84 @@ void wczytaj_zasady(char ZSD[], char *awaria)
 char** wczytaj_uklad(int *xT, int *yT, char *awaria)
 {
 	char **D=NULL;
-	int dlugosc_linii=0, dlugosc_pliku=0;
+	int i, x, y, przydzial_udany=1;
+	int dlugosc_linii=-1, dlugosc_pliku=0;
 	FILE *plik_danych=NULL;
 	char znak;
 	plik_danych=fopen("a.txt","r");
 	if (plik_danych!=NULL)
 	{
-		petladokoncaliniiczy4849
-		fseek(plik_danych,0,SEEK_SET);
-		petladokoncaplikuczyEOF
+		do
+		{
+			dlugosc_linii++;
+			znak=fgetc(plik_danych);
+		} while (jest4849(znak)); // podwójne zabezpieczenie
 		fseek(plik_danych,0,SEEK_SET); // kursor czytaj¹cy na poczatek pliku
-		
-		xT=
-		yT=
-	
-	
-		// dynamiczna alokacja
-		petladokoncaplikuczyta
-		imozeawariabyczprzydzialupam
-	
-	
+		do
+		{
+			znak=fgetc(plik_danych);
+			if (jest4849(znak)) dlugosc_pliku++;
+		} while (znak!=EOF && !feof(plik_danych));
+		if (dlugosc_linii>0)
+		{
+			*xT=dlugosc_linii;
+			*yT=dlugosc_pliku/dlugosc_linii; // zawsze bedzie > 0, brak bledu
+			D=malloc((*yT)*sizeof(char*));
+			if (D==NULL) przydzial_udany=0;
+			if (przydzial_udany)
+			{
+				for (i=0;i<(*yT);i++)
+				{
+					*(D+i)=NULL;
+					*(D+i)=malloc((*xT)*sizeof(char));
+					if ((*(D+i))==NULL) przydzial_udany=0;
+				}
+				if (przydzial_udany)
+				{
+					for (x=0;x<(*xT);x++)
+					{
+						for (y=0;y<(*yT);y++)
+						{
+							*(*(D+y)+x)=0;
+						}
+					}
+					fseek(plik_danych,0,SEEK_SET);
+					i=(*yT)-1;
+					x=0;
+					do
+					{
+						znak=fgetc(plik_danych);
+						if (jest4849(znak))
+						{
+							*(*(D+i)+x)=znak-48;
+							x++;
+							if (x==(*xT))
+							{
+								x=0;
+								i--;
+							}
+						}
+					} while ((znak!=EOF) && (!feof(plik_danych)) && (i>-1));
+				}
+				else
+				{
+					*awaria=34;
+					for (i=0;i<(*yT);i++)
+					{
+						if (*(D+i)!=NULL) free(*(D+i));
+					}
+				}
+				
+			}
+			else
+			{
+				*awaria=34;
+			}
+		}
+		else
+		{
+			*awaria=33;
+		}
 	}
 	else
 	{
@@ -176,7 +246,7 @@ void zapisz_uklad(char **T, int xT, int yT, char *awaria)
 
 void zwolnij_pamiec(char **T, int xT, int yT)
 {
-	
+	// if T!=NULL
 }
 
 void wypisz_komunikat_o_awarii(int awaria)
@@ -192,6 +262,14 @@ void wypisz_komunikat_o_awarii(int awaria)
 		{
 			fprintf(stderr, "Otwarcie pliku ze stanem poczatkowym ukladu komorek nie powiodlo sie. Program zostanie zamkniety.\n");
 		} break;
+		case 33:
+		{
+			fprintf(stderr, "Plik ze stanem poczatkowym ukladu komorek nie ma prawidlowej struktury. Program zostanie zamkniety.\n");
+		} break;
+		case 34:
+		{
+			fprintf(stderr, "Dynamiczny przydzial pamieci nie powiodl sie. Program zostanie zamkniety.\n");
+		} break;
 		default:
 		{
 			fprintf(stderr, "Wystapil nieznany blad. Program zostanie zamkniety.\n");
@@ -202,4 +280,10 @@ void wypisz_komunikat_o_awarii(int awaria)
 void wypisz_komunikat_zakonczenia()
 {
 	
+}
+
+int jest4849(char znak)
+{
+	if (znak==48 || znak==49) return 1;
+	else return 0;
 }
