@@ -1,7 +1,7 @@
 /*
 PLAN REALIZACJI PROJEKTU
 Niewykonane:
-	Sprawdziæ wszystko to, co mam do tej pory (przejrzeæ kod).
+	Sprawdziæ wszystko to, co mam do tej pory (przejrzeæ kod) - jeszcze nadal niewykonane.
 	Sprawdziæ, czy system("cls"); dzia³a pod Linuxem
 	Œwiat tych automatów komórkowych ma byæ nieskoñczony. Zastanowiê siê, czy dodaæ torus.
 	pamiêtaj: d0 musi zasze wynosiæ 0, aby pusta przestrzeñ nie ulega³a samowype³nieniu.
@@ -57,7 +57,7 @@ Nigdy nie "commituj" pliku wykonywalnego ani pliku 000commit.txt zawieraj¹cego o
 void wczytaj_zasady(char ZSD[], char *awaria);
 char** wczytaj_uklad(int *xT, int *yT, char *awaria);
 void zapisz_uklad(char **T, int xT, int yT, char *awaria);
-void zwolnij_pamiec(char **T, int xT, int yT);
+void zwolnij_pamiec(char **T, int yT);
 void wypisz_komunikat_o_awarii(int awaria);
 void wypisz_komunikat_zakonczenia();
 
@@ -101,7 +101,7 @@ int main(int agrc, char *argv[])
 			{
 				wypisz_komunikat_o_awarii(awaria);
 			}
-			zwolnij_pamiec(T,xT,yT);
+			zwolnij_pamiec(T,yT);
 		}
 		else
 		{
@@ -263,9 +263,17 @@ void zapisz_uklad(char **T, int xT, int yT, char *awaria)
 	}
 }
 
-void zwolnij_pamiec(char **T, int xT, int yT)
+void zwolnij_pamiec(char **T, int yT)
 {
-	// if T!=NULL
+	int i;
+	if (T!=NULL)
+	{
+		for (i=0;i<yT;i++)
+		{
+			if (*(T+i)!=NULL) free(*(D+i));
+		}
+		free(T);
+	}
 }
 
 void wypisz_komunikat_o_awarii(int awaria)
