@@ -1,12 +1,12 @@
 /*
 PLAN REALIZACJI PROJEKTU
 Niewykonane:
-	Sprawdziæ wszystko to, co mam do tej pory (przejrzeæ kod) - jeszcze nadal niewykonane.
 	Sprawdziæ, czy system("cls"); dzia³a pod Linuxem
+	- Sprawdziæ wszystko to, co mam do tej pory (przejrzeæ kod) - jeszcze nadal niewykonane.
+	- Napisaæ czêœæ œrodkow¹ - edytor.
 	Œwiat tych automatów komórkowych ma byæ nieskoñczony. Zastanowiê siê, czy dodaæ torus.
-	pamiêtaj: d0 musi zasze wynosiæ 0, aby pusta przestrzeñ nie ulega³a samowype³nieniu.
 	Do przyjmowania poleceñ od u¿ytkownika w trakcie dzia³ania programu wszêdzie u¿ywaj getch() z conio.h
-	Linux - https://linux.die.net/man/3/sleep / Windows - sleep() windows.h, ifdef itp. 
+	Linux - https://linux.die.net/man/3/sleep / Windows - sleep() z windows.h, ifdef itp. 
 	Warunkowo zdefiniuj dzielnik, jeœli funkcje sleep() wymagaj¹ innych jednostek.
 	
 	*(T+2) --> *(*(T+2)+0) ; *(*(T+2)+1) ; *(*(T+2)+2)
@@ -38,6 +38,7 @@ Wykonane:
 	U¿ytkownik mo¿e zmieniaæ minimaln¹ d³ugoœæ kroku czasowego w ENTER-auto, SPACJA-krok.
 	Dodaj (do instrukcji) przycisk zmiany d³ugoœci jednego kroku z wyœwietlaniem na marginesie. Mo¿na te¿ wyœwietlaæ liczebnoœæ populacji, po³o¿enie kursora itp.
 	W przyk³adach poka¿ zasady gry w ¿ycie Conway'a oraz Gosper Glider Gun. Niech bêd¹ równie¿ pocz¹tkowymi zawartoœciami plików wejœciowych.
+	pamiêtaj: d0 musi zasze wynosiæ 0, aby pusta przestrzeñ nie ulega³a samowype³nieniu.
 
 
 Nigdy nie "commituj" pliku wykonywalnego ani pliku 000commit.txt zawieraj¹cego opis commita.
@@ -219,6 +220,8 @@ char** wczytaj_uklad(int *xT, int *yT, char *awaria)
 					{
 						if (*(D+i)!=NULL) free(*(D+i));
 					}
+					free(D);
+					D=NULL;
 				}
 				
 			}
@@ -310,7 +313,10 @@ void wypisz_komunikat_o_awarii(int awaria)
 
 void wypisz_komunikat_zakonczenia()
 {
-	
+	system("cls");
+	printf("Praca programu zostala zakonczona. Program zostanie zamkniety. Nacisnij dowolny przycisk, aby kontynuowac.");
+	fflush(stdin);
+	getch();
 }
 
 int jest4849(char znak)
