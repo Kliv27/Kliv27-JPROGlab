@@ -241,7 +241,26 @@ char** wczytaj_uklad(int *xT, int *yT, char *awaria)
 
 void zapisz_uklad(char **T, int xT, int yT, char *awaria)
 {
-	
+	int x, y;
+	FILE *plik_wyjsciowy=NULL;
+	char znak;
+	plik_wyjsciowy=fopen("out.txt","w");
+	if (plik_wyjsciowy!=NULL)
+	{
+		for (y=0;y<yT;y++)
+		{
+			for (x=0;x<xT;x++)
+			{
+				fputc(48+(*(*(T+y)+x)),plik_wyjsciowy);
+			}
+			fputc('\r',plik_wyjsciowy);
+			fputc('\n',plik_wyjsciowy);
+		}
+	}
+	else
+	{
+		*awaria=35;
+	}
 }
 
 void zwolnij_pamiec(char **T, int xT, int yT)
@@ -256,11 +275,11 @@ void wypisz_komunikat_o_awarii(int awaria)
 	{
 		case 31:
 		{
-			fprintf(stderr, "Otwarcie pliku z zasadami nie powiodlo sie. Program zostanie zamkniety.\n");
+			fprintf(stderr, "Otworzenie pliku z zasadami nie powiodlo sie. Program zostanie zamkniety.\n");
 		} break;
 		case 32:
 		{
-			fprintf(stderr, "Otwarcie pliku ze stanem poczatkowym ukladu komorek nie powiodlo sie. Program zostanie zamkniety.\n");
+			fprintf(stderr, "Otworzenie pliku ze stanem poczatkowym ukladu komorek nie powiodlo sie. Program zostanie zamkniety.\n");
 		} break;
 		case 33:
 		{
@@ -269,6 +288,10 @@ void wypisz_komunikat_o_awarii(int awaria)
 		case 34:
 		{
 			fprintf(stderr, "Dynamiczny przydzial pamieci nie powiodl sie. Program zostanie zamkniety.\n");
+		} break;
+		case 35:
+		{
+			fprintf(stderr, "Nie udalo sie otworzyc pliku a.txt. Program zostanie zamkniety a wyniki - utracone.\n");
 		} break;
 		default:
 		{
