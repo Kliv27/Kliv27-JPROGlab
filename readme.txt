@@ -81,6 +81,6 @@ przyciski WASD lub strza³ki - do przemieszczania widoku (i kursora) po wirtualny
 przycisk ESC - do zakoñczenia pracy programu (stan koñcowy zostanie zapisany automatycznie);
 przycisk SPACJA - wykonanie jednego kroku czasowego;
 przycisk ENTER - przejœcie miêdzy stanem EDYCJI (pauzy) a stanem ci¹g³ego automatycznego wykonywania kroków przez program;
-przycisk T - zmiana dystansu, na jaki przemieszcza siê kursor;
-przycisk Y - zmiana stanu komórki pod kursorem w trybie edycji;
-przycisk U - zmiana minimalnej d³ugoœci kroku czasowego;
+przycisk T - zmiana tempa;
+przycisk U - zmiana dystansu, na jaki przemieszcza siê kursor;
+przycisk O - zmiana stanu komórki pod kursorem w trybie edycji;

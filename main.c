@@ -2,7 +2,10 @@
 PLAN REALIZACJI PROJEKTU
 Niewykonane:
 	
-	- Napisaæ czêœæ œrodkow¹ - edytor.
+	G³ównie zosta³o:
+		- dodanie wyswietlania (funkcja)
+		- dodanie prostych reakcji na przyciski (na lokalnych zmiennych funkcji main)
+		- dodanie zlozonych reakcji (dzialanie zasad automatu - funkcja wykonujaca krok, zmiana tempa z 1x na 4x czyli 4Hz itp. time_t do tego zeby kontrolowac i sleep )
 	Œwiat tych automatów komórkowych ma byæ nieskoñczony. Zastanowiê siê, czy dodaæ torus - nie ma takiej potrzeby.
 	Porada: krok iteracyjny automatu nie powinien byc wykonywany w osobnej funkcji, zeby nie alokowac i dealokowac pamieci co chwila
 	stworz tablice w funkcji glownej i ona zawiera nowy stan i zamien wskazniki
@@ -61,6 +64,30 @@ Nigdy nie "commituj" pliku wykonywalnego ani pliku 000commit.txt zawieraj¹cego o
 #define liczba_zasad_2 18
 #define stand_margin_pustki 20
 
+#define KLAWISZ_STRZALKI 224
+#define KLAWISZ_STRZALKA_W_LEWO 75
+#define KLAWISZ_STRZALKA_W_PRAWO 77
+#define KLAWISZ_STRZALKA_W_GORE 72
+#define KLAWISZ_STRZALKA_W_DOL 80
+/* CAPS i SHIFT nie wplywaja na strzalki, na SPACJE, na ENTER i na ESC*/
+#define KLAWISZ_w 119
+#define KLAWISZ_a 97
+#define KLAWISZ_s 115
+#define KLAWISZ_d 100
+#define KLAWISZ_t 116
+#define KLAWISZ_u 117
+#define KLAWISZ_o 111
+#define KLAWISZ_W 87
+#define KLAWISZ_A 65
+#define KLAWISZ_S 83
+#define KLAWISZ_D 68
+#define KLAWISZ_T 84
+#define KLAWISZ_U 85
+#define KLAWISZ_O 79
+#define KLAWISZ_SPACJA 32
+#define KLAWISZ_ENTER 13
+#define KLAWISZ_ESC 27
+
 void wczytaj_zasady(char ZSD[], char *awaria);
 char** wczytaj_uklad(int *xT, int *yT, char *awaria);
 void zapisz_uklad(char **T, int xT, int yT, char *awaria);
@@ -71,7 +98,7 @@ void wypisz_komunikat_zakonczenia();
 int jest4849(char znak);
 char TT(char **T, int xT, int yT, int x0, int y0, int Xc, int Yc); /* odczytuje element tablicy lub pustkê poza ni¹ */
 int ile_populacja(char **T, int xT, int yT);
-
+unsigned char nacisniecie_przycisku();
 
 
 
@@ -85,7 +112,8 @@ char** zmniejsz_rozmiar_planszy_maksymalnie(int *xT, int *yT, int *x0, int *y0, 
 
 int main(int agrc, char *argv[])
 {
-	char **T=NULL, komunikacja, awaria=0;
+	char **T=NULL, awaria=0;
+	unsigned char komunikacja;
 	int xT=0, yT=0, x0=0, y0=0, xkur=0, ykur=0; /* wymiary tablicy, po³o¿enie punktu (0,0) wzglêdem tablicy, po³o¿enie kursora */
 	char ZSD[18]; /* zasady od a0 do d8 */
 	wczytaj_zasady(ZSD,&awaria);
@@ -98,19 +126,47 @@ int main(int agrc, char *argv[])
 			y0=yT/2; /* y0 jest zawsze >=0, bo jest wzgledem tablicy */
 			xkur=x0; /* ustawienie kursora na srodek */
 			ykur=y0; /* muszê pamiêtaæ o sytuacji, gdy kursor wykracza poza tablicê - ma to byc dozwolone i obslugiwane */
-			
-			
-			
-			/* operacje na ukladzie, edytor */
-			
-			
-			
-			
-			
-			
-			
-			
-			
+			do
+			{
+				/* wyswietlenie */
+				komunikacja=nacisniecie_przycisku();
+				if ((komunikacja==STRZALKA_W_LEWO) || (komunikacja==KLAWISZ_A) || (komunikacja==KLAWISZ_a))
+				{
+					
+				}
+				if ((komunikacja==STRZALKA_W_PRAWO) || (komunikacja==KLAWISZ_D) || (komunikacja==KLAWISZ_d))
+				{
+					
+				}
+				if ((komunikacja==STRZALKA_W_GORE) || (komunikacja==KLAWISZ_W) || (komunikacja==KLAWISZ_w))
+				{
+					
+				}
+				if ((komunikacja==STRZALKA_W_DOL) || (komunikacja==KLAWISZ_S) || (komunikacja==KLAWISZ_s))
+				{
+					
+				}
+				if ((komunikacja==KLAWISZ_T) || (komunikacja==KLAWISZ_t))
+				{
+					
+				}
+				if ((komunikacja==KLAWISZ_U) || (komunikacja==KLAWISZ_u))
+				{
+					
+				}
+				if ((komunikacja==KLAWISZ_O) || (komunikacja==KLAWISZ_o))
+				{
+					
+				}
+				if (komunikacja==KLAWISZ_SPACJA)
+				{
+					
+				}
+				if (komunikacja==KLAWISZ_ENTER)
+				{
+					
+				}
+			} while (komunikacja!=KLAWISZ_ESC);
 			zapisz_uklad(T,xT,yT,&awaria);
 			if (awaria!=0)
 			{
@@ -357,4 +413,17 @@ int ile_populacja(char **T, int xT, int yT)
 		}
 	}
 	return wynik;
+}
+
+unsigned char nacisniecie_przycisku();
+{
+	unsigned char klawisz;
+    fflush(stdin);
+    klawisz=getch();
+	if (klawisz==KLAWISZ_STRZALKI)
+    {
+        klawisz=getch();
+        fflush(stdin);
+	}
+	return klawisz;
 }
