@@ -71,16 +71,23 @@ out.txt - plik zawieraj¹cy wynik dzia³ania programu po jego zakoñczeniu. Ma iden
 EDYTOR
 Stan uk³adu wyœwietlany jest w ekranie o wymiarach 61 x 61. Ekran ten mo¿na przesuwaæ po nieskoñczonym œwiecie (z ograniczeniem do mo¿liwoœci obliczeniowych komputera). Po jego prawej stronie znajduje siê margines z informacjami. Na samym œrodku ekranu znajduje siê kursor. S³u¿y on do zmieniania stanu komórki, na który wskazuje. Jest to mo¿liwe wy³¹cznie w czasie, gdy symulacja jest zatrzymana.
 Oznaczenia wystêpuj¹ce na planszy:
-' ' - oznacza martw¹ komórkê;
-'O' - oznacza ¿yw¹ komórkê;
-'^' - oznacza kursor, jeœli pod nim jest martwa komórka;
-'X' - oznacza kursor, jeœli pod nim jest ¿ywa komórka;
+  " " - oznacza martw¹ komórkê;
+  "O" - oznacza ¿yw¹ komórkê;
+  "^" - oznacza kursor, jeœli pod nim jest martwa komórka;
+  "X" - oznacza kursor, jeœli pod nim jest ¿ywa komórka;
+Na marginesie poza plansz¹ w prawym górnym rogu widoczne s¹ wartoœci opisuj¹ce bie¿¹c¹ sytuacjê. Podaj¹ one maksymalnie 6 cyfr. Oto, co oznaczaj¹:
+  Populacja - podaje ³¹czn¹ liczbê ¿ywych komórek w chwili obecnej;
+  Czas - podaje numer iteracji (kroku czasowego) przyjmuj¹c, ¿e stan pocz¹tkowy to chwila oznaczana jako 0;
+  Tempo - podaje czêstotliwoœæ (1x oznacza 1 Hz) zwi¹zan¹ z liczb¹ wykonywanych kroków iteracyjnych w jednostce czasu, gdy uruchomiony jest tryb automatyczny;
+  Dystans - podaje, na jak¹ odleg³oœæ przesunie siê perspektywa w edytorze;
+  x, y - podaj¹ po³o¿enie (w dyskretnym kartezjañskim uk³adzie wspó³rzêdnych) komórki znajduj¹cej siê pod kursorem (na œrodku planszy);
+Wspó³rzêdne kartezjañskie jednoznacznie identyfikuj¹ komórkê w przestrzeni - jest ona powi¹zana ze swoimi przesz³ymi i przysz³ymi stanami. Dziêki nim mo¿na okreœliæ to, jak uk³ad komórek (np. statek) siê przemieœci³.
 
 STEROWANIE:
 przyciski WASD lub strza³ki - do przemieszczania widoku (i kursora) po wirtualnym œwiecie;
 przycisk ESC - do zakoñczenia pracy programu (stan koñcowy zostanie zapisany automatycznie);
 przycisk SPACJA - wykonanie jednego kroku czasowego;
 przycisk ENTER - przejœcie miêdzy stanem EDYCJI (pauzy) a stanem ci¹g³ego automatycznego wykonywania kroków przez program;
-przycisk T - zmiana tempa;
-przycisk U - zmiana dystansu, na jaki przemieszcza siê kursor;
+przycisk T - zmiana tempa (d³ugoœci czasu rzeczywistego przeznaczonego na jeden krok czasowy automatu);
+przycisk U - zmiana dystansu, na jaki przemieszcza siê perspektywa/kursor;
 przycisk O - zmiana stanu komórki pod kursorem w trybie edycji;

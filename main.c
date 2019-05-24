@@ -3,9 +3,9 @@ PLAN REALIZACJI PROJEKTU
 Niewykonane:
 	
 	G³ównie zosta³o:
-		- dodanie wyswietlania (funkcja)
 		- dodanie prostych reakcji na przyciski (na lokalnych zmiennych funkcji main)
-		- dodanie zlozonych reakcji (dzialanie zasad automatu - funkcja wykonujaca krok, zmiana tempa z 1x na 4x czyli 4Hz itp. time_t do tego zeby kontrolowac i sleep )
+		- dodanie zlozonych reakcji (dzialanie zasad automatu - funkcja wykonujaca krok, zmiana tempa z 1x na 4x czyli 4Hz itp.
+		time_t do tego zeby kontrolowac ((dopelnienie roznicy t2-t1)+(t2-t1) = dlugosc_kroku) i sleep(dopelnienie roznicy) )
 	Œwiat tych automatów komórkowych ma byæ nieskoñczony. Zastanowiê siê, czy dodaæ torus - nie ma takiej potrzeby.
 	Porada: krok iteracyjny automatu nie powinien byc wykonywany w osobnej funkcji, zeby nie alokowac i dealokowac pamieci co chwila
 	stworz tablice w funkcji glownej i ona zawiera nowy stan i zamien wskazniki
@@ -39,6 +39,7 @@ Wykonane:
 	W przyk³adach poka¿ zasady gry w ¿ycie Conway'a oraz Gosper Glider Gun. Niech bêd¹ równie¿ pocz¹tkowymi zawartoœciami plików wejœciowych.
 	pamiêtaj: d0 musi zasze wynosiæ 0, aby pusta przestrzeñ nie ulega³a samowype³nieniu.
 	- Sprawdziæ wszystko to, co mam do tej pory (przejrzeæ kod).
+	- dodanie wyswietlania (funkcja)
 
 
 Nigdy nie "commituj" pliku wykonywalnego ani pliku 000commit.txt zawieraj¹cego opis commita.
@@ -96,11 +97,11 @@ void wypisz_komunikat_o_awarii(char awaria);
 void wypisz_komunikat_zakonczenia();
 
 int jest4849(char znak);
-char TT(char **T, int xT, int yT, int x0, int y0, int Xc, int Yc); /* odczytuje element tablicy lub pustkê poza ni¹ */
+char TT(int Xc, int Yc, char **T, int xT, int yT, int x0, int y0); /* odczytuje element tablicy lub pustkê poza ni¹ */
 int ile_populacja(char **T, int xT, int yT);
 unsigned char nacisniecie_przycisku();
-
-
+float tempo(int skala_tempa);
+void wyswietl(char **T,  int xT, int yT, int x0, int y0, int xkur, int ykur, int skala_tempa, int dystans, int czas);
 
 
 
@@ -115,6 +116,9 @@ int main(int agrc, char *argv[])
 	char **T=NULL, awaria=0;
 	unsigned char komunikacja;
 	int xT=0, yT=0, x0=0, y0=0, xkur=0, ykur=0; /* wymiary tablicy, po³o¿enie punktu (0,0) wzglêdem tablicy, po³o¿enie kursora */
+	int skala_tempa=0, dystans=1, czas=0;
+	/* skala_tempa od -1 (0.5x) do 4 (16x)  */
+	/* dystans 1 3 5 10 20 40 */
 	char ZSD[18]; /* zasady od a0 do d8 */
 	wczytaj_zasady(ZSD,&awaria);
 	if (awaria==0)
@@ -128,7 +132,7 @@ int main(int agrc, char *argv[])
 			ykur=y0; /* muszê pamiêtaæ o sytuacji, gdy kursor wykracza poza tablicê - ma to byc dozwolone i obslugiwane */
 			do
 			{
-				/* wyswietlenie */
+				wyswietl(T,xT,yT,x0,y0,xkur,ykur,skala_tempa,dystans,czas);
 				komunikacja=nacisniecie_przycisku();
 				if ((komunikacja==STRZALKA_W_LEWO) || (komunikacja==KLAWISZ_A) || (komunikacja==KLAWISZ_a))
 				{
@@ -160,11 +164,11 @@ int main(int agrc, char *argv[])
 				}
 				if (komunikacja==KLAWISZ_SPACJA)
 				{
-					
+					/* po prostu wykona jeden krok - ale nie za pomoca funkcji zewnetrznej - porzebna ci tablica pom P i jej obsluga bledow i pilnowanie zeby miala ten sam rozmiar */
 				}
 				if (komunikacja==KLAWISZ_ENTER)
 				{
-					
+					/* gdzies brakuje if(kbhit()) */
 				}
 			} while (komunikacja!=KLAWISZ_ESC);
 			zapisz_uklad(T,xT,yT,&awaria);
@@ -391,7 +395,7 @@ int jest4849(char znak)
 	else return 0;
 }
 
-char TT(char **T, int xT, int yT, int x0, int y0, int Xc, int Yc)
+char TT(int Xc, int Yc, char **T, int xT, int yT, int x0, int y0)
 {
 	int tabx;
 	int taby;
@@ -426,4 +430,76 @@ unsigned char nacisniecie_przycisku();
         fflush(stdin);
 	}
 	return klawisz;
+}
+
+float tempo(int skala_tempa)
+{
+	float wynik=1.0;
+	if (skala_tempa>0)
+	{
+		while (skala_tempa!=0)
+		{
+			wynik=wynik*2.0;
+			skala_tempa--;
+		}
+	}
+	else
+	{
+		while (skala_tempa!=0)
+		{
+			wynik=wynik/2.0;
+			skala_tempa++;
+		}
+	}
+	return wynik;
+}
+
+void wyswietl(char **T, int xT, int yT, int x0, int y0, int xkur, int ykur, int skala_tempa, int dystans, int czas)
+{
+	int i, j, imin, imax, jmin, jmax, pomx, pomy;
+	/* kursor wzgledem ekranu jest na: (30, 30) */
+	pomx=(x_ekran-1)/2;
+	pomy=(y_ekran-1)/2;
+	imin=xkur-pomx;
+	imax=xkur+pomx;
+	jmin=ykur-pomy;
+	jmax=ykur+pomy;
+	system("cls");
+	for (j=jmax;j>=jmin;j--)
+	{
+		for (i=imin;i<=imax;i++)
+		{
+			if ((i==xkur) && (j==ykur))
+			{
+				switch (TT(i,j,T,xT,yT,x0,y0))
+				{
+					case 0: putchar('^'); break;
+					case 1: putchar('X');
+				}
+			}
+			else
+			{
+				switch (TT(i,j,T,xT,yT,x0,y0))
+				{
+					case 0: putchar(' '); break;
+					case 1: putchar('O');
+				}
+			}
+		}
+		putchar('#');
+		switch (jmax-j)
+		{
+			case 0: printf(" Populacja: %d",ile_populacja(T,xT,yT)%1000000); break;
+			case 1: printf(" Czas: %d",czas%1000000); break;
+			case 2: printf(" Tempo: %2.2fx",tempo(skala_tempa)); break;
+			case 3: printf(" Dystans: %d",dystans%1000000); break;
+			case 4: printf(" x: %d",xkur%1000000); break;
+			case 5: printf(" y: %d",ykur%1000000);
+		}
+		putchar('\n');
+	}
+	for (i=-1;i<x_ekran;i++)
+	{
+		putchar('#');
+	}
 }
