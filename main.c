@@ -70,7 +70,7 @@ void wypisz_komunikat_zakonczenia();
 
 int jest4849(char znak);
 char TT(char **T, int xT, int yT, int x0, int y0, int Xc, int Yc); /* odczytuje element tablicy lub pustkê poza ni¹ */
-
+int ile_populacja(char **T, int xT, int yT);
 
 
 
@@ -343,4 +343,18 @@ char TT(char **T, int xT, int yT, int x0, int y0, int Xc, int Yc)
 	taby=y0+Yc;
 	if ((tabx>0) && (taby>0) && (tabx<xT) && (taby<yT)) {return (*(*(T+taby)+tabx));}
 	return 0; /* poza tablic¹ jest bezkresna pustka */
+}
+
+int ile_populacja(char **T, int xT, int yT)
+{
+	int wynik=0;
+	int i, j;
+	for (i=0;i<xT;i++)
+	{
+		for (j=0;j<yT;j++)
+		{
+			if ((*((*(T+j))+i))==1) wynik++;
+		}
+	}
+	return wynik;
 }
