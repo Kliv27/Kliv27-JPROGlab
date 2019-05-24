@@ -1,7 +1,6 @@
 /*
 PLAN REALIZACJI PROJEKTU
 Niewykonane:
-	Napisaæ readme2.txt bez polskich znaków.
 	
 	- Napisaæ czêœæ œrodkow¹ - edytor.
 	Œwiat tych automatów komórkowych ma byæ nieskoñczony. Zastanowiê siê, czy dodaæ torus - nie ma takiej potrzeby.
@@ -12,14 +11,7 @@ Niewykonane:
 	Do przyjmowania poleceñ od u¿ytkownika w trakcie dzia³ania programu wszêdzie u¿ywaj getch() z conio.h
 	Linux - https://linux.die.net/man/3/sleep / Windows - sleep() z windows.h, ifdef itp. 
 	Warunkowo zdefiniuj dzielnik, jeœli funkcje sleep() wymagaj¹ innych jednostek. Mo¿esz u¿ywaæ ró¿nic czasu z <time.h>
-	
-	*(T+2) --> *(*(T+2)+0) ; *(*(T+2)+1) ; *(*(T+2)+2)
-	*(T+1) --> *(*(T+1)+0) ; *(*(T+1)+1) ; *(*(T+1)+2)
-	*(T+0) --> *(*(T+0)+0) ; *(*(T+0)+1) ; *(*(T+0)+2)
-	/\
-	|
-	|
-	T		*(*(T+y)+x)
+	Napisaæ readme2.txt bez polskich znaków - dopiero, gdy pewne jest, ¿e readme.txt nie ulegnie zmianom.
 	
 Wykonane:
 	Rezygnujê z wieloœci kolorów.
@@ -47,6 +39,15 @@ Wykonane:
 
 
 Nigdy nie "commituj" pliku wykonywalnego ani pliku 000commit.txt zawieraj¹cego opis commita.
+
+	*(T+2) --> *(*(T+2)+0) ; *(*(T+2)+1) ; *(*(T+2)+2)
+	*(T+1) --> *(*(T+1)+0) ; *(*(T+1)+1) ; *(*(T+1)+2)
+	*(T+0) --> *(*(T+0)+0) ; *(*(T+0)+1) ; *(*(T+0)+2)
+	/\
+	|
+	|
+	T		*(*(T+y)+x)
+
 */
 
 #include <stdio.h>
@@ -68,11 +69,19 @@ void wypisz_komunikat_o_awarii(char awaria);
 void wypisz_komunikat_zakonczenia();
 
 int jest4849(char znak);
+char TT(char **T, int xT, int yT, int x0, int y0, int Xc, int Yc); /* odczytuje element tablicy lub pustkê poza ni¹ */
+
+
+
+
+
+
+
+
 
 char** zwieksz_rozmiar_planszy(int *xT, int *yT, int *x0, int *y0, char *awaria, int u, int l, int r, int d); /* cztery ostatnie argumenty musza byc dlugosciami */
 char** zmniejsz_rozmiar_planszy(int *xT, int *yT, int *x0, int *y0, char *awaria); /* obcina planszê zostawiaj¹c margines pustki równy marginesowi dodawanemu. Wywo³ywaæ np. co 100 kroków. */
 char** zmniejsz_rozmiar_planszy_maksymalnie(int *xT, int *yT, int *x0, int *y0, char *awaria); /* nie zostawia marginesu pustki, te trzy funkcje na pewno nie maja zmienic polozenia kursora */
-char TT(char **T, int xT, int yT, int px, int py); /* odczytuje element tablicy lub pustkê poza ni¹ */
 
 int main(int agrc, char *argv[])
 {
@@ -85,8 +94,8 @@ int main(int agrc, char *argv[])
 		T=wczytaj_uklad(&xT,&yT,&awaria);
 		if (awaria==0)
 		{
-			x0=xT/2;
-			y0=yT/2;
+			x0=xT/2; /* x0 jest zawsze >=0, bo jest wzgledem tablicy */
+			y0=yT/2; /* y0 jest zawsze >=0, bo jest wzgledem tablicy */
 			xkur=x0; /* ustawienie kursora na srodek */
 			ykur=y0; /* muszê pamiêtaæ o sytuacji, gdy kursor wykracza poza tablicê - ma to byc dozwolone i obslugiwane */
 			
@@ -324,4 +333,14 @@ int jest4849(char znak)
 {
 	if (znak==48 || znak==49) return 1;
 	else return 0;
+}
+
+char TT(char **T, int xT, int yT, int x0, int y0, int Xc, int Yc)
+{
+	int tabx;
+	int taby;
+	tabx=x0+Xc; /* polozenie kartezjanskich Xc Yc we wspolrzednych tablicowych*/
+	taby=y0+Yc;
+	if ((tabx>0) && (taby>0) && (tabx<xT) && (taby<yT)) {return (*(*(T+taby)+tabx));}
+	return 0; /* poza tablic¹ jest bezkresna pustka */
 }
