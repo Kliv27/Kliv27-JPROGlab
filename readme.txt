@@ -54,7 +54,7 @@ Drugim z plików wejœciowych jest a.txt, który zawiera pocz¹tkowy stan uk³adu. Sk
 - 0
 - 1
 - nowej linii (nie wystêpuje tu problem z ró¿nicami miêdzy znakiem nowej linii na systemach z rodziny Windows i Linux - dzia³aj¹ obydwie metody zapisania znaku nowej linii)
-D³ugoœæ ka¿dej linii tego pliku powinna byæ identyczna. Mo¿e byæ dowolnie dobrana (pod warunkiem, ¿e wszystkie linie s¹ równe). Liczba wierszy równie¿ jest dowolna.
+D³ugoœæ ka¿dej linii tego pliku powinna byæ identyczna. Mo¿e byæ dowolnie dobrana (pod warunkiem, ¿e wszystkie linie s¹ równej d³ugoœci). Liczba wierszy równie¿ jest dowolna.
 Przyk³adowa zawartoœæ pliku a.txt przedstawiona jest poni¿ej, miêdzy znakami ------- (w przyk³adzie poni¿ej widoczny jest zal¹¿ek uk³adu Gosper Glider Gun z Gry w ¯ycie John'a Conway'a):
 ----------------------------------------------------------------------------------------
 000000000000000000000000000001010000

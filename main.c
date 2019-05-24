@@ -1,13 +1,17 @@
 /*
 PLAN REALIZACJI PROJEKTU
 Niewykonane:
-	Sprawdziæ, czy system("cls"); dzia³a pod Linuxem
-	- Sprawdziæ wszystko to, co mam do tej pory (przejrzeæ kod) - jeszcze nadal niewykonane.
+	Napisaæ readme2.txt bez polskich znaków.
+	
 	- Napisaæ czêœæ œrodkow¹ - edytor.
-	Œwiat tych automatów komórkowych ma byæ nieskoñczony. Zastanowiê siê, czy dodaæ torus.
+	Œwiat tych automatów komórkowych ma byæ nieskoñczony. Zastanowiê siê, czy dodaæ torus - nie ma takiej potrzeby.
+	Porada: krok iteracyjny automatu nie powinien byc wykonywany w osobnej funkcji, zeby nie alokowac i dealokowac pamieci co chwila
+	stworz tablice w funkcji glownej i ona zawiera nowy stan i zamien wskazniki
+	Sprawdziæ, czy system("cls"); dzia³a pod Linuxem - poszukaæ odpowiedników.
+	Linux ma pewnie swoje w³asne system("pause") (jakieœ inne polecenie ma do tego) wiêc nie ma potrzeby, ¿ebym liczy³ ile znaków wypisa³em printfem i je kasowa³.
 	Do przyjmowania poleceñ od u¿ytkownika w trakcie dzia³ania programu wszêdzie u¿ywaj getch() z conio.h
 	Linux - https://linux.die.net/man/3/sleep / Windows - sleep() z windows.h, ifdef itp. 
-	Warunkowo zdefiniuj dzielnik, jeœli funkcje sleep() wymagaj¹ innych jednostek.
+	Warunkowo zdefiniuj dzielnik, jeœli funkcje sleep() wymagaj¹ innych jednostek. Mo¿esz u¿ywaæ ró¿nic czasu z <time.h>
 	
 	*(T+2) --> *(*(T+2)+0) ; *(*(T+2)+1) ; *(*(T+2)+2)
 	*(T+1) --> *(*(T+1)+0) ; *(*(T+1)+1) ; *(*(T+1)+2)
@@ -39,6 +43,7 @@ Wykonane:
 	Dodaj (do instrukcji) przycisk zmiany d³ugoœci jednego kroku z wyœwietlaniem na marginesie. Mo¿na te¿ wyœwietlaæ liczebnoœæ populacji, po³o¿enie kursora itp.
 	W przyk³adach poka¿ zasady gry w ¿ycie Conway'a oraz Gosper Glider Gun. Niech bêd¹ równie¿ pocz¹tkowymi zawartoœciami plików wejœciowych.
 	pamiêtaj: d0 musi zasze wynosiæ 0, aby pusta przestrzeñ nie ulega³a samowype³nieniu.
+	- Sprawdziæ wszystko to, co mam do tej pory (przejrzeæ kod).
 
 
 Nigdy nie "commituj" pliku wykonywalnego ani pliku 000commit.txt zawieraj¹cego opis commita.
@@ -59,21 +64,21 @@ void wczytaj_zasady(char ZSD[], char *awaria);
 char** wczytaj_uklad(int *xT, int *yT, char *awaria);
 void zapisz_uklad(char **T, int xT, int yT, char *awaria);
 void zwolnij_pamiec(char **T, int yT);
-void wypisz_komunikat_o_awarii(int awaria);
+void wypisz_komunikat_o_awarii(char awaria);
 void wypisz_komunikat_zakonczenia();
 
 int jest4849(char znak);
 
-char** zwieksz_rozmiar_planszy(int *xT, int *yT, int *x0, int *y0, char *awaria, int u, int l, int r, int d); // cztery ostatnie argumenty musza byc dlugosciami
-char** zmniejsz_rozmiar_planszy(int *xT, int *yT, int *x0, int *y0, char *awaria); // obcina planszê zostawiaj¹c margines pustki równy marginesowi dodawanemu. Wywo³ywaæ np. co 100 kroków.
-char** zmniejsz_rozmiar_planszy_maksymalnie(int *xT, int *yT, int *x0, int *y0, char *awaria); // nie zostawia marginesu pustki, te trzy funkcje na pewno nie maja zmienic polozenia kursora
-char TT(char **T, int xT, int yT, int px, int py); // odczytuje element tablicy lub pustkê poza ni¹
+char** zwieksz_rozmiar_planszy(int *xT, int *yT, int *x0, int *y0, char *awaria, int u, int l, int r, int d); /* cztery ostatnie argumenty musza byc dlugosciami */
+char** zmniejsz_rozmiar_planszy(int *xT, int *yT, int *x0, int *y0, char *awaria); /* obcina planszê zostawiaj¹c margines pustki równy marginesowi dodawanemu. Wywo³ywaæ np. co 100 kroków. */
+char** zmniejsz_rozmiar_planszy_maksymalnie(int *xT, int *yT, int *x0, int *y0, char *awaria); /* nie zostawia marginesu pustki, te trzy funkcje na pewno nie maja zmienic polozenia kursora */
+char TT(char **T, int xT, int yT, int px, int py); /* odczytuje element tablicy lub pustkê poza ni¹ */
 
 int main(int agrc, char *argv[])
 {
 	char **T=NULL, komunikacja, awaria=0;
-	int xT=0, yT=0, x0=0, y0=0, xkur=0, ykur=0; // wymiary tablicy, po³o¿enie punktu (0,0) wzglêdem tablicy, po³o¿enie kursora
-	char ZSD[18]; // zasady od a0 do d8
+	int xT=0, yT=0, x0=0, y0=0, xkur=0, ykur=0; /* wymiary tablicy, po³o¿enie punktu (0,0) wzglêdem tablicy, po³o¿enie kursora */
+	char ZSD[18]; /* zasady od a0 do d8 */
 	wczytaj_zasady(ZSD,&awaria);
 	if (awaria==0)
 	{
@@ -82,12 +87,12 @@ int main(int agrc, char *argv[])
 		{
 			x0=xT/2;
 			y0=yT/2;
-			xkur=x0; // ustawienie kursora na srodek
-			ykur=y0; // muszê pamiêtaæ o sytuacji, gdy kursor wykracza poza tablicê - ma to byc dozwolone i obslugiwane
+			xkur=x0; /* ustawienie kursora na srodek */
+			ykur=y0; /* muszê pamiêtaæ o sytuacji, gdy kursor wykracza poza tablicê - ma to byc dozwolone i obslugiwane */
 			
 			
 			
-			// operacje na ukladzie, edytor
+			/* operacje na ukladzie, edytor */
 			
 			
 			
@@ -120,14 +125,14 @@ int main(int agrc, char *argv[])
 void wczytaj_zasady(char ZSD[], char *awaria)
 {
 	int i=0;
+	FILE *plik_zasad=NULL;
+	char znak[3]={48,48,48};
 	while (i<liczba_zasad_2)
 	{
 		ZSD[i]=0;
 		i++;
 	}
 	i=0;
-	FILE *plik_zasad=NULL;
-	char znak[3]={48,48,48};
 	plik_zasad=fopen("zasady.txt","r");
 	if (plik_zasad!=NULL)
 	{
@@ -141,8 +146,8 @@ void wczytaj_zasady(char ZSD[], char *awaria)
 				ZSD[i]=znak[2]-48;
 				i++;
 			}				
-		} while (znak[2]!=EOF && (!feof(plik_zasad))); // podwójne zabezpieczenie
-		ZSD[9]=0; // d0 = 0
+		} while (znak[2]!=EOF && (!feof(plik_zasad))); /* podwójne zabezpieczenie */
+		ZSD[9]=0; /* d0 = 0 */
 		fclose(plik_zasad);
 	}
 	else
@@ -165,8 +170,8 @@ char** wczytaj_uklad(int *xT, int *yT, char *awaria)
 		{
 			dlugosc_linii++;
 			znak=fgetc(plik_danych);
-		} while (jest4849(znak)); // podwójne zabezpieczenie
-		fseek(plik_danych,0,SEEK_SET); // kursor czytaj¹cy na poczatek pliku
+		} while (jest4849(znak)); /* podwójne zabezpieczenie */
+		fseek(plik_danych,0,SEEK_SET); /* kursor czytaj¹cy na poczatek pliku */
 		do
 		{
 			znak=fgetc(plik_danych);
@@ -175,7 +180,7 @@ char** wczytaj_uklad(int *xT, int *yT, char *awaria)
 		if (dlugosc_linii>0)
 		{
 			*xT=dlugosc_linii;
-			*yT=dlugosc_pliku/dlugosc_linii; // zawsze bedzie > 0, brak bledu
+			*yT=dlugosc_pliku/dlugosc_linii; /* zawsze bedzie > 0, brak bledu */
 			D=malloc((*yT)*sizeof(char*));
 			if (D==NULL) przydzial_udany=0;
 			if (przydzial_udany)
@@ -216,11 +221,7 @@ char** wczytaj_uklad(int *xT, int *yT, char *awaria)
 				else
 				{
 					*awaria=34;
-					for (i=0;i<(*yT);i++)
-					{
-						if (*(D+i)!=NULL) free(*(D+i));
-					}
-					free(D);
+					zwolnij_pamiec(D,*yT);
 					D=NULL;
 				}
 				
@@ -256,8 +257,7 @@ void zapisz_uklad(char **T, int xT, int yT, char *awaria)
 			{
 				fputc(48+(*(*(T+y)+x)),plik_wyjsciowy);
 			}
-			fputc('\r',plik_wyjsciowy);
-			fputc('\n',plik_wyjsciowy);
+			fputc('\n',plik_wyjsciowy); /* na wiki pisza, ze \n samo sie zmieni na \r\n pod Windows, Linux - \n dziala najzwyczajniej */
 		}
 	}
 	else
@@ -268,18 +268,19 @@ void zapisz_uklad(char **T, int xT, int yT, char *awaria)
 
 void zwolnij_pamiec(char **T, int yT)
 {
+	/* UWAGA! Funkcja nie zeruje wskaznika z innej funkcji, bo jest on przekazany przez wartosc.*/
 	int i;
 	if (T!=NULL)
 	{
 		for (i=0;i<yT;i++)
 		{
-			if (*(T+i)!=NULL) free(*(D+i));
+			if (*(T+i)!=NULL) free(*(T+i));
 		}
 		free(T);
 	}
 }
 
-void wypisz_komunikat_o_awarii(int awaria)
+void wypisz_komunikat_o_awarii(char awaria)
 {
 	system("cls");
 	switch (awaria)
