@@ -3,15 +3,16 @@ PLAN REALIZACJI PROJEKTU
 Niewykonane:
 	
 	G³ównie zosta³o:
-		- dodanie prostych reakcji na przyciski (na lokalnych zmiennych funkcji main)
-		- dodanie zlozonych reakcji (dzialanie zasad automatu - funkcja wykonujaca krok, zmiana tempa z 1x na 4x czyli 4Hz itp.
-		time_t do tego zeby kontrolowac ((dopelnienie roznicy t2-t1)+(t2-t1) = dlugosc_kroku) i sleep(dopelnienie roznicy) )
-	Œwiat tych automatów komórkowych ma byæ nieskoñczony. Zastanowiê siê, czy dodaæ torus - nie ma takiej potrzeby.
-	Porada: krok iteracyjny automatu nie powinien byc wykonywany w osobnej funkcji, zeby nie alokowac i dealokowac pamieci co chwila
-	stworz tablice w funkcji glownej i ona zawiera nowy stan i zamien wskazniki
+		- dodanie tablicy pomocniczej, jej przydzial pamieci, obsluga jej bledow
+		- dodanie prostych reakcji na przyciski (na lokalnych zmiennych funkcji main) - za pomoca pojedynczych instrukcji
+		- dodanie zlozonych reakcji (dzialanie zasad automatu - funkcja wykonujaca krok, zmiana tempa z 1x na 4x czyli 4Hz itp., zmiana dystansu)
+			powy¿sze nale¿y zrealizowaæ za pomoc¹ funkcji, bo bêd¹ te¿ dostêpne w trybie ci¹g³ym (ENTER)
+			funkcja wykonuj¹ca krok musi przekazywaæ wskaŸnik na wskaŸnik przez wskaŸnik (char ***T_adres)
+				Porada: krok iteracyjny automatu jednak powinien byc wykonywany w osobnej funkcji, ale bez alokowania pamieci co chwila
+				stworz tablice w funkcji glownej i ona zawiera nowy stan i zamien wskazniki
+	U¿yj time_t do tego zeby kontrolowac ((dopelnienie roznicy t2-t1)+(t2-t1) = dlugosc_kroku) i sleep(dopelnienie roznicy) )
 	Sprawdziæ, czy system("cls"); dzia³a pod Linuxem - poszukaæ odpowiedników.
 	Linux ma pewnie swoje w³asne system("pause") (jakieœ inne polecenie ma do tego) wiêc nie ma potrzeby, ¿ebym liczy³ ile znaków wypisa³em printfem i je kasowa³.
-	Do przyjmowania poleceñ od u¿ytkownika w trakcie dzia³ania programu wszêdzie u¿ywaj getch() z conio.h
 	Linux - https://linux.die.net/man/3/sleep / Windows - sleep() z windows.h, ifdef itp. 
 	Warunkowo zdefiniuj dzielnik, jeœli funkcje sleep() wymagaj¹ innych jednostek. Mo¿esz u¿ywaæ ró¿nic czasu z <time.h>
 	Napisaæ readme2.txt bez polskich znaków - dopiero, gdy pewne jest, ¿e readme.txt nie ulegnie zmianom.
@@ -40,6 +41,8 @@ Wykonane:
 	pamiêtaj: d0 musi zasze wynosiæ 0, aby pusta przestrzeñ nie ulega³a samowype³nieniu.
 	- Sprawdziæ wszystko to, co mam do tej pory (przejrzeæ kod).
 	- dodanie wyswietlania (funkcja)
+	Do przyjmowania poleceñ od u¿ytkownika w trakcie dzia³ania programu wszêdzie u¿ywaj getch() z conio.h
+	Œwiat tych automatów komórkowych ma byæ nieskoñczony. Decydujê siê ostatecznie nie dodawaæ opcji symulacji na torusie.
 
 
 Nigdy nie "commituj" pliku wykonywalnego ani pliku 000commit.txt zawieraj¹cego opis commita.
@@ -164,11 +167,11 @@ int main(int agrc, char *argv[])
 				}
 				if (komunikacja==KLAWISZ_SPACJA)
 				{
-					/* po prostu wykona jeden krok - ale nie za pomoca funkcji zewnetrznej - porzebna ci tablica pom P i jej obsluga bledow i pilnowanie zeby miala ten sam rozmiar */
+					/* po prostu wykona jeden krok - jednak za pomoca funkcji - porzebna ci tablica pom P i jej obsluga bledow i pilnowanie zeby miala ten sam rozmiar */
 				}
 				if (komunikacja==KLAWISZ_ENTER)
 				{
-					/* gdzies brakuje if(kbhit()) */
+					/* gdzies brakuje do {if(kbhit()){} }while(komunikacja!=KLAWISZ_ENTER); */
 				}
 			} while (komunikacja!=KLAWISZ_ESC);
 			zapisz_uklad(T,xT,yT,&awaria);
