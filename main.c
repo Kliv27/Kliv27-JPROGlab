@@ -3,8 +3,7 @@ PLAN REALIZACJI PROJEKTU
 Niewykonane:
 	
 	G³ównie zosta³o:
-		- dodanie prostych reakcji na przyciski (na lokalnych zmiennych funkcji main) - za pomoca pojedynczych instrukcji
-		- dodanie zlozonych reakcji (dzialanie zasad automatu - funkcja wykonujaca krok, zmiana tempa z 1x na 4x czyli 4Hz itp., zmiana dystansu)
+		- funkcja wykonujaca krok,
 			powy¿sze nale¿y zrealizowaæ za pomoc¹ funkcji, bo bêd¹ te¿ dostêpne w trybie ci¹g³ym (ENTER)
 			funkcja wykonuj¹ca krok musi przekazywaæ wskaŸnik na wskaŸnik przez wskaŸnik (char ***T_adres)
 				Porada: krok iteracyjny automatu jednak powinien byc wykonywany w osobnej funkcji, ale bez alokowania pamieci co chwila
@@ -43,6 +42,8 @@ Wykonane:
 	Do przyjmowania poleceñ od u¿ytkownika w trakcie dzia³ania programu wszêdzie u¿ywaj getch() z conio.h
 	Œwiat tych automatów komórkowych ma byæ nieskoñczony. Decydujê siê ostatecznie nie dodawaæ opcji symulacji na torusie.
 	- dodanie tablicy pomocniczej, jej przydzial pamieci, obsluga jej bledow
+	- dodanie prostych reakcji na przyciski (na lokalnych zmiennych funkcji main) - za pomoca pojedynczych instrukcji
+	- dodanie zlozonych reakcji (dzialanie zasad automatu zmiana tempa z 1x na 4x czyli 4Hz itp., zmiana dystansu)
 
 
 Nigdy nie "commituj" pliku wykonywalnego ani pliku 000commit.txt zawieraj¹cego opis commita.
@@ -106,8 +107,8 @@ unsigned char nacisniecie_przycisku();
 float tempo(int skala_tempa);
 void wyswietl(char **T,  int xT, int yT, int x0, int y0, int xkur, int ykur, int skala_tempa, int dystans, int czas);
 char** przydziel_pamiec_tablicy_pomocniczej(int xT, int yT, char *awaria);
-
-
+void zmien_skale_tempa(int *wsk_skala_tempa);
+void zmien_dystans(int *wsk_dystans);
 
 
 char** zwieksz_rozmiar_planszy(int *xT, int *yT, int *x0, int *y0, char *awaria, int u, int l, int r, int d); /* cztery ostatnie argumenty musza byc dlugosciami */
@@ -142,27 +143,27 @@ int main(int agrc, char *argv[])
 					komunikacja=nacisniecie_przycisku();
 					if ((komunikacja==STRZALKA_W_LEWO) || (komunikacja==KLAWISZ_A) || (komunikacja==KLAWISZ_a))
 					{
-						
+						xkur-=dystans;
 					}
 					else if ((komunikacja==STRZALKA_W_PRAWO) || (komunikacja==KLAWISZ_D) || (komunikacja==KLAWISZ_d))
 					{
-						
+						xkur+=dystans;
 					}
 					else if ((komunikacja==STRZALKA_W_GORE) || (komunikacja==KLAWISZ_W) || (komunikacja==KLAWISZ_w))
 					{
-						
+						ykur+=dystans;
 					}
 					else if ((komunikacja==STRZALKA_W_DOL) || (komunikacja==KLAWISZ_S) || (komunikacja==KLAWISZ_s))
 					{
-						
+						ykur-=dystans;
 					}
 					else if ((komunikacja==KLAWISZ_T) || (komunikacja==KLAWISZ_t))
 					{
-						
+						zmien_skale_tempa(&skala_tempa);
 					}
 					else if ((komunikacja==KLAWISZ_U) || (komunikacja==KLAWISZ_u))
 					{
-						
+						zmien_dystans(&dystans);
 					}
 					else if ((komunikacja==KLAWISZ_O) || (komunikacja==KLAWISZ_o))
 					{
@@ -551,4 +552,24 @@ char** przydziel_pamiec_tablicy_pomocniczej(int xT, int yT, char *awaria)
 		*awaria=34;
 	}
 	return P;
+}
+
+void zmien_skale_tempa(int *wsk_skala_tempa)
+{
+	(*wsk_skala_tempa)++;
+	if ((*wsk_skala_tempa)>4) *wsk_skala_tempa=-1;
+}
+
+void zmien_dystans(int *wsk_dystans)
+{
+	/* dystans 1 3 5 10 20 40 */
+	switch (*wsk_dystans)
+	{
+		case 1: *wsk_dystans=3; break;
+		case 3: *wsk_dystans=5; break;
+		case 5: *wsk_dystans=10; break;
+		case 10: *wsk_dystans=20; break;
+		case 20: *wsk_dystans=40; break;
+		default: *wsk_dystans=1;
+	}
 }
