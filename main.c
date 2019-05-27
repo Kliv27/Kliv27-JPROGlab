@@ -3,7 +3,6 @@ PLAN REALIZACJI PROJEKTU
 Niewykonane:
 	
 	G³ównie zosta³o:
-		- dodanie tablicy pomocniczej, jej przydzial pamieci, obsluga jej bledow
 		- dodanie prostych reakcji na przyciski (na lokalnych zmiennych funkcji main) - za pomoca pojedynczych instrukcji
 		- dodanie zlozonych reakcji (dzialanie zasad automatu - funkcja wykonujaca krok, zmiana tempa z 1x na 4x czyli 4Hz itp., zmiana dystansu)
 			powy¿sze nale¿y zrealizowaæ za pomoc¹ funkcji, bo bêd¹ te¿ dostêpne w trybie ci¹g³ym (ENTER)
@@ -43,6 +42,7 @@ Wykonane:
 	- dodanie wyswietlania (funkcja)
 	Do przyjmowania poleceñ od u¿ytkownika w trakcie dzia³ania programu wszêdzie u¿ywaj getch() z conio.h
 	Œwiat tych automatów komórkowych ma byæ nieskoñczony. Decydujê siê ostatecznie nie dodawaæ opcji symulacji na torusie.
+	- dodanie tablicy pomocniczej, jej przydzial pamieci, obsluga jej bledow
 
 
 Nigdy nie "commituj" pliku wykonywalnego ani pliku 000commit.txt zawieraj¹cego opis commita.
@@ -105,14 +105,14 @@ int ile_populacja(char **T, int xT, int yT);
 unsigned char nacisniecie_przycisku();
 float tempo(int skala_tempa);
 void wyswietl(char **T,  int xT, int yT, int x0, int y0, int xkur, int ykur, int skala_tempa, int dystans, int czas);
-
+char** przydziel_pamiec_tablicy_pomocniczej(int xT, int yT, char *awaria);
 
 
 
 
 char** zwieksz_rozmiar_planszy(int *xT, int *yT, int *x0, int *y0, char *awaria, int u, int l, int r, int d); /* cztery ostatnie argumenty musza byc dlugosciami */
 char** zmniejsz_rozmiar_planszy(int *xT, int *yT, int *x0, int *y0, char *awaria); /* obcina planszê zostawiaj¹c margines pustki równy marginesowi dodawanemu. Wywo³ywaæ np. co 100 kroków. */
-char** zmniejsz_rozmiar_planszy_maksymalnie(int *xT, int *yT, int *x0, int *y0, char *awaria); /* nie zostawia marginesu pustki, te trzy funkcje na pewno nie maja zmienic polozenia kursora */
+char** zmniejsz_rozmiar_planszy_maksymalnie(int *xT, int *yT, int *x0, int *y0, char *awaria); /* nie zostawia marginesu pustki, te trzy funkcje na pewno nie maja zmienic polozenia kursora, wywolac przed zapisem */
 
 int main(int agrc, char *argv[])
 {
@@ -129,57 +129,66 @@ int main(int agrc, char *argv[])
 		T=wczytaj_uklad(&xT,&yT,&awaria);
 		if (awaria==0)
 		{
-			x0=xT/2; /* x0 jest zawsze >=0, bo jest wzgledem tablicy */
-			y0=yT/2; /* y0 jest zawsze >=0, bo jest wzgledem tablicy */
-			xkur=x0; /* ustawienie kursora na srodek */
-			ykur=y0; /* muszê pamiêtaæ o sytuacji, gdy kursor wykracza poza tablicê - ma to byc dozwolone i obslugiwane */
-			do
+			P=przydziel_pamiec_tablicy_pomocniczej(xT,yT,&awaria);
+			if (awaria==0)
 			{
-				wyswietl(T,xT,yT,x0,y0,xkur,ykur,skala_tempa,dystans,czas);
-				komunikacja=nacisniecie_przycisku();
-				if ((komunikacja==STRZALKA_W_LEWO) || (komunikacja==KLAWISZ_A) || (komunikacja==KLAWISZ_a))
+				x0=xT/2; /* x0 jest zawsze >=0, bo jest wzgledem tablicy */
+				y0=yT/2; /* y0 jest zawsze >=0, bo jest wzgledem tablicy */
+				xkur=x0; /* ustawienie kursora na srodek */
+				ykur=y0; /* muszê pamiêtaæ o sytuacji, gdy kursor wykracza poza tablicê - ma to byc dozwolone i obslugiwane */
+				do
 				{
-					
-				}
-				if ((komunikacja==STRZALKA_W_PRAWO) || (komunikacja==KLAWISZ_D) || (komunikacja==KLAWISZ_d))
+					wyswietl(T,xT,yT,x0,y0,xkur,ykur,skala_tempa,dystans,czas);
+					komunikacja=nacisniecie_przycisku();
+					if ((komunikacja==STRZALKA_W_LEWO) || (komunikacja==KLAWISZ_A) || (komunikacja==KLAWISZ_a))
+					{
+						
+					}
+					else if ((komunikacja==STRZALKA_W_PRAWO) || (komunikacja==KLAWISZ_D) || (komunikacja==KLAWISZ_d))
+					{
+						
+					}
+					else if ((komunikacja==STRZALKA_W_GORE) || (komunikacja==KLAWISZ_W) || (komunikacja==KLAWISZ_w))
+					{
+						
+					}
+					else if ((komunikacja==STRZALKA_W_DOL) || (komunikacja==KLAWISZ_S) || (komunikacja==KLAWISZ_s))
+					{
+						
+					}
+					else if ((komunikacja==KLAWISZ_T) || (komunikacja==KLAWISZ_t))
+					{
+						
+					}
+					else if ((komunikacja==KLAWISZ_U) || (komunikacja==KLAWISZ_u))
+					{
+						
+					}
+					else if ((komunikacja==KLAWISZ_O) || (komunikacja==KLAWISZ_o))
+					{
+						
+					}
+					else if (komunikacja==KLAWISZ_SPACJA)
+					{
+						/* po prostu wykona jeden krok - jednak za pomoca funkcji - porzebna ci tablica pom P i jej obsluga bledow i pilnowanie zeby miala ten sam rozmiar */
+					}
+					else if (komunikacja==KLAWISZ_ENTER)
+					{
+						/* gdzies brakuje do {if(kbhit()){} }while(komunikacja!=KLAWISZ_ENTER); */
+					}
+				} while (komunikacja!=KLAWISZ_ESC);
+				zapisz_uklad(T,xT,yT,&awaria);
+				if (awaria!=0)
 				{
-					
+					wypisz_komunikat_o_awarii(awaria);
 				}
-				if ((komunikacja==STRZALKA_W_GORE) || (komunikacja==KLAWISZ_W) || (komunikacja==KLAWISZ_w))
-				{
-					
-				}
-				if ((komunikacja==STRZALKA_W_DOL) || (komunikacja==KLAWISZ_S) || (komunikacja==KLAWISZ_s))
-				{
-					
-				}
-				if ((komunikacja==KLAWISZ_T) || (komunikacja==KLAWISZ_t))
-				{
-					
-				}
-				if ((komunikacja==KLAWISZ_U) || (komunikacja==KLAWISZ_u))
-				{
-					
-				}
-				if ((komunikacja==KLAWISZ_O) || (komunikacja==KLAWISZ_o))
-				{
-					
-				}
-				if (komunikacja==KLAWISZ_SPACJA)
-				{
-					/* po prostu wykona jeden krok - jednak za pomoca funkcji - porzebna ci tablica pom P i jej obsluga bledow i pilnowanie zeby miala ten sam rozmiar */
-				}
-				if (komunikacja==KLAWISZ_ENTER)
-				{
-					/* gdzies brakuje do {if(kbhit()){} }while(komunikacja!=KLAWISZ_ENTER); */
-				}
-			} while (komunikacja!=KLAWISZ_ESC);
-			zapisz_uklad(T,xT,yT,&awaria);
-			if (awaria!=0)
+				zwolnij_pamiec(T,yT);
+				zwolnij_pamiec(P,yT);
+			}
+			else
 			{
 				wypisz_komunikat_o_awarii(awaria);
 			}
-			zwolnij_pamiec(T,yT);
 		}
 		else
 		{
@@ -505,4 +514,41 @@ void wyswietl(char **T, int xT, int yT, int x0, int y0, int xkur, int ykur, int 
 	{
 		putchar('#');
 	}
+}
+
+char** przydziel_pamiec_tablicy_pomocniczej(int xT, int yT, char *awaria)
+{
+	char **P=NULL;
+	int i, j, przydzial_udany=1;
+	P=malloc(yT*sizeof(char*));
+	if (P!=NULL)
+	{
+		for (i=0;i<yT;i++)
+		{
+			*(P+i)=NULL;
+			*(P+i)=malloc(xT*sizeof(char));
+			if ((*(P+i))==NULL) przydzial_udany=0;
+		}
+		if (przydzial_udany)
+		{
+			for (i=0;i<xT;i++)
+			{
+				for (j=0;j<yT;j++)
+				{
+					*(*(P+j)+i)=0;
+				}
+			}
+		}
+		else
+		{
+			*awaria=34;
+			zwolnij_pamiec(P,yT);
+			P=NULL;
+		}
+	}
+	else
+	{
+		*awaria=34;
+	}
+	return P;
 }
