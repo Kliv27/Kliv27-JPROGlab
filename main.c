@@ -3,10 +3,7 @@ PLAN REALIZACJI PROJEKTU
 Niewykonane:
 	
 	G³ównie zosta³o:
-		- napisanie funkcji wykonujacej krok - musi przekazywaæ wskaŸnik na wskaŸnik przez wskaŸnik (char ***T_adres)
-				Porada: krok iteracyjny automatu jednak powinien byc wykonywany w osobnej funkcji, ale bez alokowania pamieci co chwila
-				stworz tablice w funkcji glownej i ona zawiera nowy stan i zamien wskazniki
-		- wywolanie funkcji dealokujacej nadmiar pamieci np. co 100 kroków
+	- kroki automatyczne (ENTER)
 	U¿yj time_t do tego zeby kontrolowac ((dopelnienie roznicy t2-t1)+(t2-t1) = dlugosc_kroku) i sleep(dopelnienie roznicy) )
 	Sprawdziæ, czy system("cls"); dzia³a pod Linuxem - poszukaæ odpowiedników.
 	Linux ma pewnie swoje w³asne system("cls") (jakieœ inne polecenie ma do tego) wiêc nie ma potrzeby, ¿ebym liczy³ ile znaków wypisa³em printfem i je kasowa³.
@@ -47,6 +44,10 @@ Wykonane:
 	- napisanie funkcji wykonuj¹cych alokacjê/dealokacjê pamiêci
 	- sprobuj alokowac pamiec (przy wczytywaniu danych) za pomoca innej funkcji (wywolaj inna)
 	- dodanie reakcji na przycisk O (zmiana stanu komórki w edytorze)
+	- napisanie funkcji wykonujacej krok - musi przekazywaæ wskaŸnik na wskaŸnik przez wskaŸnik (char ***T_adres)
+		Porada: krok iteracyjny automatu jednak powinien byc wykonywany w osobnej funkcji, ale bez alokowania pamieci co chwila
+		stworz tablice w funkcji glownej i ona zawiera nowy stan i zamien wskazniki
+	- wywolanie funkcji dealokujacej nadmiar pamieci np. co 100 kroków
 
 
 Nigdy nie "commituj" pliku wykonywalnego ani pliku 000commit.txt zawieraj¹cego opis commita.
@@ -120,6 +121,7 @@ char** zwieksz_rozmiar_planszy(char **D, int *xT, int *yT, int *x0, int *y0, cha
 char** zmniejsz_rozmiar_planszy(char **D, int *xT, int *yT, int *x0, int *y0, char *awaria);
 /* obcina planszê zostawiaj¹c margines pustki równy marginesowi dodawanemu. Wywo³ywaæ np. co 100 kroków. */
 void zmien_stan_komorki(char ***T, char ***P, int *xT, int *yT, int *x0, int *y0, int xkur, int ykur, char *awaria);
+void wykonaj_krok(char ***T, char ***P, int *xT, int *yT, int *x0, int *y0, char ZSD[], char *awaria);
 
 int main(int agrc, char *argv[])
 {
@@ -178,7 +180,13 @@ int main(int agrc, char *argv[])
 					}
 					else if (komunikacja==KLAWISZ_SPACJA)
 					{
-						/* po prostu wykona jeden krok - jednak za pomoca funkcji - porzebna ci tablica pom P i jej obsluga bledow i pilnowanie zeby miala ten sam rozmiar */
+						wykonaj_krok(&T,&P,&xT,&yT,&x0,&y0,ZSD,&awaria);
+						czas++;
+						if ((czas%100)==0)
+						{
+							if (awaria==0) T=zmniejsz_rozmiar_planszy(T,&xT,&yT,&x0,&y0,&awaria);
+							if (awaria==0) P=zmniejsz_rozmiar_planszy(P,&xT,&yT,&x0,&y0,&awaria);
+						}
 					}
 					else if (komunikacja==KLAWISZ_ENTER)
 					{
@@ -724,6 +732,60 @@ void zmien_stan_komorki(char ***T, char ***P, int *xT, int *yT, int *x0, int *y0
 		{
 			if ((*(*(*T+(*y0)+ykur)+(*x0)+xkur))==1) (*(*(*T+(*y0)+ykur)+(*x0)+xkur))=0;
 			else (*(*(*T+(*y0)+ykur)+(*x0)+xkur))=1;
+		}
+	}
+}
+
+void wykonaj_krok(char ***T, char ***P, int *xT, int *yT, int *x0, int *y0, char ZSD[], char *awaria)
+{
+	int czy_u=0, czy_d=0, czy_l=0, czy_r=0, i, j, v, w, suma, zywa;
+	char **zamiana;
+	for (i=0;i<(*xT);i++)
+	{
+		if (*(*(*T+0)+i)==1) czy_d=1;
+	}
+	for (i=0;i<(*xT);i++)
+	{
+		if (*(*(*T+(*yT)-1)+i)==1) czy_u=1;
+	}
+	for (i=0;i<(*yT);i++)
+	{
+		if (*(*(*T+i)+0)==1) czy_l=1;
+	}
+	for (i=0;i<(*yT);i++)
+	{
+		if (*(*(*T+i)+(*xT)-1))==1) czy_r=1;
+	}
+	*T=zwieksz_rozmiar_planszy(*T,xT,yT,x0,y0,awaria,czy_u?stand_margin_pustki:0,czy_l?stand_margin_pustki:0,czy_r?stand_margin_pustki:0,czy_d?stand_margin_pustki:0);
+	if (*awaria==0)
+	{
+		*P=zwieksz_rozmiar_planszy(*P,xT,yT,x0,y0,awaria,czy_u?stand_margin_pustki:0,czy_l?stand_margin_pustki:0,czy_r?stand_margin_pustki:0,czy_d?stand_margin_pustki:0);
+		if (*awaria==0)
+		{
+			/*
+			(a,b) - wspolrzedne tablicowe
+			(a-x0,b-y0) - odpowiadajace wsp. kartez.
+			*/
+			for (j=0;j<(*yT);j++)
+			{
+				for (i=0;i<(*xT);i++)
+				{
+					suma=0;
+					for (v=(-1);v<2;v++)
+					{
+						for (w=(-1);w<2;w++)
+						{
+							suma+=TT(i-(*x0)+w,j-(*y0)+v,*T,*xT,*yT,*x0,*y0);
+						}
+					}
+					zywa=TT(i-(*x0),j-(*y0),*T,*xT,*yT,*x0,*y0);
+					if (zywa) suma--;
+					*(*(*P+j)+i)=ZSD[(zywa?0:liczba_zasad_1)+suma];
+				}
+			}
+			zamiana=*P;
+			*P=*T;
+			*T=zamiana;
 		}
 	}
 }
