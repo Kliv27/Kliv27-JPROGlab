@@ -119,7 +119,7 @@ char** zwieksz_rozmiar_planszy(char **D, int *xT, int *yT, int *x0, int *y0, cha
 /* cztery ostatnie argumenty musza byc dlugosciami, ma nie zostawiac oprocz tego jeszcze marginesu dodawanego - jak go chcesz, to zwieksz argument */
 char** zmniejsz_rozmiar_planszy(char **D, int *xT, int *yT, int *x0, int *y0, char *awaria);
 /* obcina planszê zostawiaj¹c margines pustki równy marginesowi dodawanemu. Wywo³ywaæ np. co 100 kroków. */
-void zmien_stan_komorki(char ***T, int *xT, int *yT, int *x0, int *y0, int xkur, int ykur, char *awaria);
+void zmien_stan_komorki(char ***T, char ***P, int *xT, int *yT, int *x0, int *y0, int xkur, int ykur, char *awaria);
 
 int main(int agrc, char *argv[])
 {
@@ -174,7 +174,7 @@ int main(int agrc, char *argv[])
 					}
 					else if ((komunikacja==KLAWISZ_O) || (komunikacja==KLAWISZ_o))
 					{
-						zmien_stan_komorki(&T,&xT,&yT,&x0,&y0,xkur,ykur,&awaria);
+						zmien_stan_komorki(&T,&P,&xT,&yT,&x0,&y0,xkur,ykur,&awaria);
 					}
 					else if (komunikacja==KLAWISZ_SPACJA)
 					{
@@ -686,7 +686,7 @@ char** zmniejsz_rozmiar_planszy(char **D, int *xT, int *yT, int *x0, int *y0, ch
 	return D;
 }
 
-void zmien_stan_komorki(char ***T, int *xT, int *yT, int *x0, int *y0, int xkur, int ykur, char *awaria)
+void zmien_stan_komorki(char ***T, char ***P, int *xT, int *yT, int *x0, int *y0, int xkur, int ykur, char *awaria)
 {
 	/* *(*(*T+y)+x) */
 	
@@ -695,12 +695,14 @@ void zmien_stan_komorki(char ***T, int *xT, int *yT, int *x0, int *y0, int xkur,
 	if (xkur>((-1)*(*x0)+(*xT)-1))
 	{
 		*T=zwieksz_rozmiar_planszy(*T,xT,yT,x0,y0,awaria,0,0,xkur+(*x0)-(*xT)+1+stand_margin_pustki,0);
+		*P=zwieksz_rozmiar_planszy(*P,xT,yT,x0,y0,awaria,0,0,xkur+(*x0)-(*xT)+1+stand_margin_pustki,0);
 	}
 	else
 	{
 		if (xkur<((-1)*(*x0)))
 		{
 			*T=zwieksz_rozmiar_planszy(*T,xT,yT,x0,y0,awaria,0,(-1)*(*x0)-xkur+stand_margin_pustki,0,0);
+			*P=zwieksz_rozmiar_planszy(*P,xT,yT,x0,y0,awaria,0,(-1)*(*x0)-xkur+stand_margin_pustki,0,0);
 		}
 	}
 	if (*awaria==0)
@@ -708,12 +710,14 @@ void zmien_stan_komorki(char ***T, int *xT, int *yT, int *x0, int *y0, int xkur,
 		if (ykur>((-1)*(*y0)+(*yT)-1))
 		{
 			*T=zwieksz_rozmiar_planszy(*T,xT,yT,x0,y0,awaria,ykur+(*y0)-(*yT)+1+stand_margin_pustki,0,0,0);
+			*P=zwieksz_rozmiar_planszy(*P,xT,yT,x0,y0,awaria,ykur+(*y0)-(*yT)+1+stand_margin_pustki,0,0,0);
 		}
 		else
 		{
 			if (ykur<((-1)*(*y0)))
 			{
 				*T=zwieksz_rozmiar_planszy(*T,xT,yT,x0,y0,awaria,0,0,0,(-1)*(*y0)-ykur+stand_margin_pustki);
+				*P=zwieksz_rozmiar_planszy(*P,xT,yT,x0,y0,awaria,0,0,0,(-1)*(*y0)-ykur+stand_margin_pustki);
 			}
 		}
 		if (*awaria==0)
