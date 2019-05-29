@@ -3,15 +3,18 @@ PLAN REALIZACJI PROJEKTU
 Niewykonane:
 	
 	G³ównie zosta³o:
-		- funkcja wykonujaca krok,
-			powy¿sze nale¿y zrealizowaæ za pomoc¹ funkcji, bo bêd¹ te¿ dostêpne w trybie ci¹g³ym (ENTER)
-			funkcja wykonuj¹ca krok musi przekazywaæ wskaŸnik na wskaŸnik przez wskaŸnik (char ***T_adres)
+		- napisanie funkcji wykonuj¹cych alokacjê/dealokacjê pamiêci - jeszcze nie commitowalem ich i trzeba je przejrzec
+		- sprobuj alokowac pamiec (przy wczytywaniu danych) za pomoca innej funkcji (wywolaj inna)
+		- dodanie reakcji na przycisk O (zmiana stanu komórki w edytorze)
+		- napisanie funkcji wykonujacej krok - musi przekazywaæ wskaŸnik na wskaŸnik przez wskaŸnik (char ***T_adres)
 				Porada: krok iteracyjny automatu jednak powinien byc wykonywany w osobnej funkcji, ale bez alokowania pamieci co chwila
 				stworz tablice w funkcji glownej i ona zawiera nowy stan i zamien wskazniki
+		- wywolanie funkcji dealokujacej nadmiar pamieci
 	U¿yj time_t do tego zeby kontrolowac ((dopelnienie roznicy t2-t1)+(t2-t1) = dlugosc_kroku) i sleep(dopelnienie roznicy) )
 	Sprawdziæ, czy system("cls"); dzia³a pod Linuxem - poszukaæ odpowiedników.
-	Linux ma pewnie swoje w³asne system("pause") (jakieœ inne polecenie ma do tego) wiêc nie ma potrzeby, ¿ebym liczy³ ile znaków wypisa³em printfem i je kasowa³.
-	Linux - https://linux.die.net/man/3/sleep / Windows - sleep() z windows.h, ifdef itp. 
+	Linux ma pewnie swoje w³asne system("cls") (jakieœ inne polecenie ma do tego) wiêc nie ma potrzeby, ¿ebym liczy³ ile znaków wypisa³em printfem i je kasowa³.
+	Linux - https://linux.die.net/man/3/sleep / Windows - sleep() z windows.h, ifdef itp.
+	mogê przenieœæ czêœæ kodu (pojedyncze wywo³ania funkcji np. sleep) do plików .c i includowaæ je warunkowo wewn¹trz kodu
 	Warunkowo zdefiniuj dzielnik, jeœli funkcje sleep() wymagaj¹ innych jednostek. Mo¿esz u¿ywaæ ró¿nic czasu z <time.h>
 	Napisaæ readme2.txt bez polskich znaków - dopiero, gdy pewne jest, ¿e readme.txt nie ulegnie zmianom.
 	
@@ -109,17 +112,20 @@ void wyswietl(char **T,  int xT, int yT, int x0, int y0, int xkur, int ykur, int
 char** przydziel_pamiec_tablicy_pomocniczej(int xT, int yT, char *awaria);
 void zmien_skale_tempa(int *wsk_skala_tempa);
 void zmien_dystans(int *wsk_dystans);
-
-
-char** zwieksz_rozmiar_planszy(int *xT, int *yT, int *x0, int *y0, char *awaria, int u, int l, int r, int d); /* cztery ostatnie argumenty musza byc dlugosciami */
-char** zmniejsz_rozmiar_planszy(int *xT, int *yT, int *x0, int *y0, char *awaria); /* obcina planszê zostawiaj¹c margines pustki równy marginesowi dodawanemu. Wywo³ywaæ np. co 100 kroków. */
-char** zmniejsz_rozmiar_planszy_maksymalnie(int *xT, int *yT, int *x0, int *y0, char *awaria); /* nie zostawia marginesu pustki, te trzy funkcje na pewno nie maja zmienic polozenia kursora, wywolac przed zapisem */
+char** zmniejsz_rozmiar_planszy_maksymalnie(char **D, int *xT, int *yT, int *x0, int *y0, char *awaria);
+/* wywo³anie: T=zmniejsz_rozmiar_planszy_maksymalnie(T,&xT,&yT,&x0,&y0,&awaria)*/
+/* nie zostawia marginesu pustki, te trzy funkcje na pewno nie maja zmienic polozenia kursora, wywolac przed zapisem */
+char** zwieksz_rozmiar_planszy(char **D, int *xT, int *yT, int *x0, int *y0, char *awaria, int u, int l, int r, int d);
+/* cztery ostatnie argumenty musza byc dlugosciami, ma nie zostawiac oprocz tego jeszcze marginesu dodawanego - jak go chcesz, to zwieksz argument */
+char** zmniejsz_rozmiar_planszy(char **D, int *xT, int *yT, int *x0, int *y0, char *awaria);
+/* obcina planszê zostawiaj¹c margines pustki równy marginesowi dodawanemu. Wywo³ywaæ np. co 100 kroków. */
 
 int main(int agrc, char *argv[])
 {
 	char **T=NULL, awaria=0;
 	unsigned char komunikacja;
 	int xT=0, yT=0, x0=0, y0=0, xkur=0, ykur=0; /* wymiary tablicy, po³o¿enie punktu (0,0) wzglêdem tablicy, po³o¿enie kursora */
+	/* po³o¿enie kursora jest wzgledem kartezjanskich wspolrzednych, x0 i y0 wzgledem tablicy */
 	int skala_tempa=0, dystans=1, czas=0;
 	/* skala_tempa od -1 (0.5x) do 4 (16x)  */
 	/* dystans 1 3 5 10 20 40 */
@@ -133,8 +139,8 @@ int main(int agrc, char *argv[])
 			P=przydziel_pamiec_tablicy_pomocniczej(xT,yT,&awaria);
 			if (awaria==0)
 			{
-				x0=xT/2; /* x0 jest zawsze >=0, bo jest wzgledem tablicy */
-				y0=yT/2; /* y0 jest zawsze >=0, bo jest wzgledem tablicy */
+				x0=xT/2; /* x0 jest zawsze >=0 (ale tylko na poczatku), bo jest wzgledem tablicy */
+				y0=yT/2; /* y0 jest zawsze >=0 (ale tylko na poczatku), bo jest wzgledem tablicy */
 				xkur=x0; /* ustawienie kursora na srodek */
 				ykur=y0; /* muszê pamiêtaæ o sytuacji, gdy kursor wykracza poza tablicê - ma to byc dozwolone i obslugiwane */
 				do
@@ -178,8 +184,16 @@ int main(int agrc, char *argv[])
 						/* gdzies brakuje do {if(kbhit()){} }while(komunikacja!=KLAWISZ_ENTER); */
 					}
 				} while (komunikacja!=KLAWISZ_ESC);
-				zapisz_uklad(T,xT,yT,&awaria);
-				if (awaria!=0)
+				T=zmniejsz_rozmiar_planszy_maksymalnie(T,&xT,&yT,&x0,&y0,&awaria);
+				if (awaria==0)
+				{
+					zapisz_uklad(T,xT,yT,&awaria);
+					if (awaria!=0)
+					{
+						wypisz_komunikat_o_awarii(awaria);
+					}
+				}
+				else
 				{
 					wypisz_komunikat_o_awarii(awaria);
 				}
@@ -385,7 +399,7 @@ void wypisz_komunikat_o_awarii(char awaria)
 		} break;
 		case 35:
 		{
-			fprintf(stderr, "Nie udalo sie otworzyc pliku a.txt. Program zostanie zamkniety a wyniki - utracone.\n");
+			fprintf(stderr, "Nie udalo sie otworzyc pliku out.txt. Program zostanie zamkniety a wyniki - utracone.\n");
 		} break;
 		default:
 		{
@@ -405,7 +419,7 @@ void wypisz_komunikat_zakonczenia()
 int jest4849(char znak)
 {
 	if (znak==48 || znak==49) return 1;
-	else return 0;
+	return 0;
 }
 
 char TT(int Xc, int Yc, char **T, int xT, int yT, int x0, int y0)
@@ -572,4 +586,129 @@ void zmien_dystans(int *wsk_dystans)
 		case 20: *wsk_dystans=40; break;
 		default: *wsk_dystans=1;
 	}
+}
+
+char** zmniejsz_rozmiar_planszy_maksymalnie(char **D, int *xT, int *yT, int *x0, int *y0, char *awaria)
+{
+	int wciecie_u=0, wciecie_d=0, wciecie_l=0, wciecie_r=0;
+	int i, j, logika, stareyT;
+	char **N=NULL;
+	
+	stareyT=(*yT);
+	
+	logika=1;
+	j=(*yT)-1;
+	while (logika && j>=0)
+	{
+		i=0;
+		while (i<*xT)
+		{
+			if (*((*(D+j))+i)) logika=0;
+			i++;
+		}
+		j--;
+	}
+	if (!logika)
+	{
+		wciecie_u=*yT-j-2;
+		
+		logika=1;
+		i=(*xT)-1;
+		while (logika && i>=0)
+		{
+			j=0;
+			while (j<*yT)
+			{
+				if (*((*(D+j))+i)) logika=0;
+				j++;
+			}
+			i--;
+		}
+		wciecie_r=*xT-i-2;
+		
+		logika=1;
+		i=0;
+		while (logika && i<*xT)
+		{
+			j=0;
+			while (j<*yT)
+			{
+				if (*((*(D+j))+i)) logika=0;
+				j++;
+			}
+			i++;
+		}
+		wciecie_l=i-1;
+		
+		logika=1;
+		j=0;
+		while (logika && j<*yT)
+		{
+			i=0;
+			while (i<*xT)
+			{
+				if (*((*(D+j))+i)) logika=0;
+				i++;
+			}
+			j++;
+		}
+		wciecie_d=j-1;
+		*xT=(*xT)-wciecie_l-wciecie_r;
+		*yT=(*yT)-wciecie_u-wciecie_d;
+		*x0=(*x0)-wciecie_l;
+		*y0=(*y0)-wciecie_d;
+		N=przydziel_pamiec_tablicy_pomocniczej((*xT),(*yT),awaria);
+		if (*awaria==0)
+		{
+			for (i=0;i<(*xT);i++)
+			{
+				for (j=0;j<(*yT);j++)
+				{
+					*((*(N+j))+i)=*((*(D+j+wciecie_d))+i+wciecie_l);
+				}
+			}
+		}
+	}
+	else
+	{
+		/* tablica jest pusta */
+		N=przydziel_pamiec_tablicy_pomocniczej(5,5,awaria);
+		*xT=5;
+		*yT=5;
+	}
+	zwolnij_pamiec(D,stareyT);
+	return N;
+}
+
+char** zwieksz_rozmiar_planszy(char **D, int *xT, int *yT, int *x0, int *y0, char *awaria, int u, int l, int r, int d)
+{
+	int i, j, stareyT=(*yT);
+	char **N=NULL;
+	N=przydziel_pamiec_tablicy_pomocniczej((*xT)+l+r,(*yT)+u+d,awaria);
+	if (*awaria==0)
+	{
+		for (i=0;i<(*xT);i++)
+		{
+			for (j=0;j<(*yT);j++)
+			{
+				*((*(N+j+d))+i+l)=*((*(D+j))+i);
+			}
+		}
+	}
+	*xT=(*xT)+l+r;
+	*yT=(*yT)+u+d;
+	*x0=(*x0)+l;
+	*y0=(*y0)+d;
+	zwolnij_pamiec(D,stareyT);
+	return N;
+}
+
+char** zmniejsz_rozmiar_planszy(char **D, int *xT, int *yT, int *x0, int *y0, char *awaria)
+{
+	D=zmniejsz_rozmiar_planszy_maksymalnie(D,xT,yT,x0,y0,awaria);
+	if (*awaria==0)
+	{
+		D=zwieksz_rozmiar_planszy(D,xT,yT,x0,y0,awaria,stand_margin_pustki,stand_margin_pustki,stand_margin_pustki,stand_margin_pustki);
+	}
+	return D;
 }
