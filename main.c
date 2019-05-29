@@ -3,7 +3,6 @@ PLAN REALIZACJI PROJEKTU
 Niewykonane:
 	
 	G³ównie zosta³o:
-		- dodanie reakcji na przycisk O (zmiana stanu komórki w edytorze)
 		- napisanie funkcji wykonujacej krok - musi przekazywaæ wskaŸnik na wskaŸnik przez wskaŸnik (char ***T_adres)
 				Porada: krok iteracyjny automatu jednak powinien byc wykonywany w osobnej funkcji, ale bez alokowania pamieci co chwila
 				stworz tablice w funkcji glownej i ona zawiera nowy stan i zamien wskazniki
@@ -47,6 +46,7 @@ Wykonane:
 	- dodanie zlozonych reakcji (dzialanie zasad automatu zmiana tempa z 1x na 4x czyli 4Hz itp., zmiana dystansu)
 	- napisanie funkcji wykonuj¹cych alokacjê/dealokacjê pamiêci
 	- sprobuj alokowac pamiec (przy wczytywaniu danych) za pomoca innej funkcji (wywolaj inna)
+	- dodanie reakcji na przycisk O (zmiana stanu komórki w edytorze)
 
 
 Nigdy nie "commituj" pliku wykonywalnego ani pliku 000commit.txt zawieraj¹cego opis commita.
@@ -119,6 +119,7 @@ char** zwieksz_rozmiar_planszy(char **D, int *xT, int *yT, int *x0, int *y0, cha
 /* cztery ostatnie argumenty musza byc dlugosciami, ma nie zostawiac oprocz tego jeszcze marginesu dodawanego - jak go chcesz, to zwieksz argument */
 char** zmniejsz_rozmiar_planszy(char **D, int *xT, int *yT, int *x0, int *y0, char *awaria);
 /* obcina planszê zostawiaj¹c margines pustki równy marginesowi dodawanemu. Wywo³ywaæ np. co 100 kroków. */
+void zmien_stan_komorki(char ***T, int *xT, int *yT, int *x0, int *y0, int xkur, int ykur, char *awaria);
 
 int main(int agrc, char *argv[])
 {
@@ -173,7 +174,7 @@ int main(int agrc, char *argv[])
 					}
 					else if ((komunikacja==KLAWISZ_O) || (komunikacja==KLAWISZ_o))
 					{
-						
+						zmien_stan_komorki(&T,&xT,&yT,&x0,&y0,xkur,ykur,&awaria);
 					}
 					else if (komunikacja==KLAWISZ_SPACJA)
 					{
@@ -183,8 +184,8 @@ int main(int agrc, char *argv[])
 					{
 						/* gdzies brakuje do {if(kbhit()){} }while(komunikacja!=KLAWISZ_ENTER); */
 					}
-				} while (komunikacja!=KLAWISZ_ESC);
-				T=zmniejsz_rozmiar_planszy_maksymalnie(T,&xT,&yT,&x0,&y0,&awaria);
+				} while (komunikacja!=KLAWISZ_ESC && awaria==0);
+				if (awaria==0) T=zmniejsz_rozmiar_planszy_maksymalnie(T,&xT,&yT,&x0,&y0,&awaria);
 				if (awaria==0)
 				{
 					zapisz_uklad(T,xT,yT,&awaria);
@@ -683,4 +684,42 @@ char** zmniejsz_rozmiar_planszy(char **D, int *xT, int *yT, int *x0, int *y0, ch
 		D=zwieksz_rozmiar_planszy(D,xT,yT,x0,y0,awaria,stand_margin_pustki,stand_margin_pustki,stand_margin_pustki,stand_margin_pustki);
 	}
 	return D;
+}
+
+void zmien_stan_komorki(char ***T, int *xT, int *yT, int *x0, int *y0, int xkur, int ykur, char *awaria)
+{
+	/* *(*(*T+y)+x) */
+	
+	/* prostokat: (-x0,-y0) w kartez. lewy dolny róg prostok¹ta, a prawy górny (-x0+xT-1,-y0+yT-1) */
+	
+	if (xkur>((-1)*(*x0)+(*xT)-1))
+	{
+		*T=zwieksz_rozmiar_planszy(*T,xT,yT,x0,y0,awaria,0,0,xkur+(*x0)-(*xT)+1+stand_margin_pustki,0);
+	}
+	else
+	{
+		if (xkur<((-1)*(*x0)))
+		{
+			*T=zwieksz_rozmiar_planszy(*T,xT,yT,x0,y0,awaria,0,(-1)*(*x0)-xkur+stand_margin_pustki,0,0);
+		}
+	}
+	if (*awaria==0)
+	{
+		if (ykur>((-1)*(*y0)+(*yT)-1))
+		{
+			*T=zwieksz_rozmiar_planszy(*T,xT,yT,x0,y0,awaria,ykur+(*y0)-(*yT)+1+stand_margin_pustki,0,0,0);
+		}
+		else
+		{
+			if (ykur<((-1)*(*y0)))
+			{
+				*T=zwieksz_rozmiar_planszy(*T,xT,yT,x0,y0,awaria,0,0,0,(-1)*(*y0)-ykur+stand_margin_pustki);
+			}
+		}
+		if (*awaria==0)
+		{
+			if ((*(*(*T+(*y0)+ykur)+(*x0)+xkur))==1) (*(*(*T+(*y0)+ykur)+(*x0)+xkur))=0;
+			else (*(*(*T+(*y0)+ykur)+(*x0)+xkur))=1;
+		}
+	}
 }
