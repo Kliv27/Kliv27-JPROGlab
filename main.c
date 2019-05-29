@@ -4,6 +4,7 @@ Niewykonane:
 	
 	G³ównie zosta³o:
 	- kroki automatyczne (ENTER)
+	- sprawiæ, aby funkcja wykonania kroku nie wywala³a programu - trzeba do tego przejrzec dokladnie wiele funkcji
 	U¿yj time_t do tego zeby kontrolowac ((dopelnienie roznicy t2-t1)+(t2-t1) = dlugosc_kroku) i sleep(dopelnienie roznicy) )
 	Sprawdziæ, czy system("cls"); dzia³a pod Linuxem - poszukaæ odpowiedników.
 	Linux ma pewnie swoje w³asne system("cls") (jakieœ inne polecenie ma do tego) wiêc nie ma potrzeby, ¿ebym liczy³ ile znaków wypisa³em printfem i je kasowa³.
@@ -125,7 +126,9 @@ void wykonaj_krok(char ***T, char ***P, int *xT, int *yT, int *x0, int *y0, char
 
 int main(int agrc, char *argv[])
 {
-	char **T=NULL, awaria=0;
+	char **T=NULL;
+	char **P=NULL;
+	char awaria=0;
 	unsigned char komunikacja;
 	int xT=0, yT=0, x0=0, y0=0, xkur=0, ykur=0; /* wymiary tablicy, po³o¿enie punktu (0,0) wzglêdem tablicy, po³o¿enie kursora */
 	/* po³o¿enie kursora jest wzgledem kartezjanskich wspolrzednych, x0 i y0 wzgledem tablicy */
@@ -150,19 +153,19 @@ int main(int agrc, char *argv[])
 				{
 					wyswietl(T,xT,yT,x0,y0,xkur,ykur,skala_tempa,dystans,czas);
 					komunikacja=nacisniecie_przycisku();
-					if ((komunikacja==STRZALKA_W_LEWO) || (komunikacja==KLAWISZ_A) || (komunikacja==KLAWISZ_a))
+					if ((komunikacja==KLAWISZ_STRZALKA_W_LEWO) || (komunikacja==KLAWISZ_A) || (komunikacja==KLAWISZ_a))
 					{
 						xkur-=dystans;
 					}
-					else if ((komunikacja==STRZALKA_W_PRAWO) || (komunikacja==KLAWISZ_D) || (komunikacja==KLAWISZ_d))
+					else if ((komunikacja==KLAWISZ_STRZALKA_W_PRAWO) || (komunikacja==KLAWISZ_D) || (komunikacja==KLAWISZ_d))
 					{
 						xkur+=dystans;
 					}
-					else if ((komunikacja==STRZALKA_W_GORE) || (komunikacja==KLAWISZ_W) || (komunikacja==KLAWISZ_w))
+					else if ((komunikacja==KLAWISZ_STRZALKA_W_GORE) || (komunikacja==KLAWISZ_W) || (komunikacja==KLAWISZ_w))
 					{
 						ykur+=dystans;
 					}
-					else if ((komunikacja==STRZALKA_W_DOL) || (komunikacja==KLAWISZ_S) || (komunikacja==KLAWISZ_s))
+					else if ((komunikacja==KLAWISZ_STRZALKA_W_DOL) || (komunikacja==KLAWISZ_S) || (komunikacja==KLAWISZ_s))
 					{
 						ykur-=dystans;
 					}
@@ -427,7 +430,7 @@ int ile_populacja(char **T, int xT, int yT)
 	return wynik;
 }
 
-unsigned char nacisniecie_przycisku();
+unsigned char nacisniecie_przycisku()
 {
 	unsigned char klawisz;
     fflush(stdin);
@@ -499,7 +502,7 @@ void wyswietl(char **T, int xT, int yT, int x0, int y0, int xkur, int ykur, int 
 		{
 			case 0: printf(" Populacja: %d",ile_populacja(T,xT,yT)%1000000); break;
 			case 1: printf(" Czas: %d",czas%1000000); break;
-			case 2: printf(" Tempo: %2.2fx",tempo(skala_tempa)); break;
+			case 2: printf(" Tempo: %.1fx",tempo(skala_tempa)); break;
 			case 3: printf(" Dystans: %d",dystans%1000000); break;
 			case 4: printf(" x: %d",xkur%1000000); break;
 			case 5: printf(" y: %d",ykur%1000000);
@@ -754,7 +757,7 @@ void wykonaj_krok(char ***T, char ***P, int *xT, int *yT, int *x0, int *y0, char
 	}
 	for (i=0;i<(*yT);i++)
 	{
-		if (*(*(*T+i)+(*xT)-1))==1) czy_r=1;
+		if (*(*(*T+i)+(*xT)-1)==1) czy_r=1;
 	}
 	*T=zwieksz_rozmiar_planszy(*T,xT,yT,x0,y0,awaria,czy_u?stand_margin_pustki:0,czy_l?stand_margin_pustki:0,czy_r?stand_margin_pustki:0,czy_d?stand_margin_pustki:0);
 	if (*awaria==0)
