@@ -6,7 +6,7 @@ Niewykonane:
 		- napisanie funkcji wykonujacej krok - musi przekazywaæ wskaŸnik na wskaŸnik przez wskaŸnik (char ***T_adres)
 				Porada: krok iteracyjny automatu jednak powinien byc wykonywany w osobnej funkcji, ale bez alokowania pamieci co chwila
 				stworz tablice w funkcji glownej i ona zawiera nowy stan i zamien wskazniki
-		- wywolanie funkcji dealokujacej nadmiar pamieci
+		- wywolanie funkcji dealokujacej nadmiar pamieci np. co 100 kroków
 	U¿yj time_t do tego zeby kontrolowac ((dopelnienie roznicy t2-t1)+(t2-t1) = dlugosc_kroku) i sleep(dopelnienie roznicy) )
 	Sprawdziæ, czy system("cls"); dzia³a pod Linuxem - poszukaæ odpowiedników.
 	Linux ma pewnie swoje w³asne system("cls") (jakieœ inne polecenie ma do tego) wiêc nie ma potrzeby, ¿ebym liczy³ ile znaków wypisa³em printfem i je kasowa³.
@@ -695,14 +695,14 @@ void zmien_stan_komorki(char ***T, char ***P, int *xT, int *yT, int *x0, int *y0
 	if (xkur>((-1)*(*x0)+(*xT)-1))
 	{
 		*T=zwieksz_rozmiar_planszy(*T,xT,yT,x0,y0,awaria,0,0,xkur+(*x0)-(*xT)+1+stand_margin_pustki,0);
-		*P=zwieksz_rozmiar_planszy(*P,xT,yT,x0,y0,awaria,0,0,xkur+(*x0)-(*xT)+1+stand_margin_pustki,0);
+		if (*awaria==0) *P=zwieksz_rozmiar_planszy(*P,xT,yT,x0,y0,awaria,0,0,xkur+(*x0)-(*xT)+1+stand_margin_pustki,0);
 	}
 	else
 	{
 		if (xkur<((-1)*(*x0)))
 		{
 			*T=zwieksz_rozmiar_planszy(*T,xT,yT,x0,y0,awaria,0,(-1)*(*x0)-xkur+stand_margin_pustki,0,0);
-			*P=zwieksz_rozmiar_planszy(*P,xT,yT,x0,y0,awaria,0,(-1)*(*x0)-xkur+stand_margin_pustki,0,0);
+			if (*awaria==0) *P=zwieksz_rozmiar_planszy(*P,xT,yT,x0,y0,awaria,0,(-1)*(*x0)-xkur+stand_margin_pustki,0,0);
 		}
 	}
 	if (*awaria==0)
@@ -710,14 +710,14 @@ void zmien_stan_komorki(char ***T, char ***P, int *xT, int *yT, int *x0, int *y0
 		if (ykur>((-1)*(*y0)+(*yT)-1))
 		{
 			*T=zwieksz_rozmiar_planszy(*T,xT,yT,x0,y0,awaria,ykur+(*y0)-(*yT)+1+stand_margin_pustki,0,0,0);
-			*P=zwieksz_rozmiar_planszy(*P,xT,yT,x0,y0,awaria,ykur+(*y0)-(*yT)+1+stand_margin_pustki,0,0,0);
+			if (*awaria==0) *P=zwieksz_rozmiar_planszy(*P,xT,yT,x0,y0,awaria,ykur+(*y0)-(*yT)+1+stand_margin_pustki,0,0,0);
 		}
 		else
 		{
 			if (ykur<((-1)*(*y0)))
 			{
 				*T=zwieksz_rozmiar_planszy(*T,xT,yT,x0,y0,awaria,0,0,0,(-1)*(*y0)-ykur+stand_margin_pustki);
-				*P=zwieksz_rozmiar_planszy(*P,xT,yT,x0,y0,awaria,0,0,0,(-1)*(*y0)-ykur+stand_margin_pustki);
+				if (*awaria==0) *P=zwieksz_rozmiar_planszy(*P,xT,yT,x0,y0,awaria,0,0,0,(-1)*(*y0)-ykur+stand_margin_pustki);
 			}
 		}
 		if (*awaria==0)
