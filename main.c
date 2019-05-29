@@ -3,14 +3,17 @@ PLAN REALIZACJI PROJEKTU
 Niewykonane:
 	
 	G³ównie zosta³o:
-	- kroki automatyczne (ENTER)
 	- sprawiæ, aby funkcja wykonania kroku nie wywala³a programu - trzeba do tego przejrzec dokladnie wiele funkcji
+	
+	- kroki automatyczne (ENTER) - dopracowanie
 	U¿yj time_t do tego zeby kontrolowac ((dopelnienie roznicy t2-t1)+(t2-t1) = dlugosc_kroku) i sleep(dopelnienie roznicy) )
+	
 	Sprawdziæ, czy system("cls"); dzia³a pod Linuxem - poszukaæ odpowiedników.
 	Linux ma pewnie swoje w³asne system("cls") (jakieœ inne polecenie ma do tego) wiêc nie ma potrzeby, ¿ebym liczy³ ile znaków wypisa³em printfem i je kasowa³.
 	Linux - https://linux.die.net/man/3/sleep / Windows - sleep() z windows.h, ifdef itp.
 	mogê przenieœæ czêœæ kodu (pojedyncze wywo³ania funkcji np. sleep) do plików .c i includowaæ je warunkowo wewn¹trz kodu
 	Warunkowo zdefiniuj dzielnik, jeœli funkcje sleep() wymagaj¹ innych jednostek. Mo¿esz u¿ywaæ ró¿nic czasu z <time.h>
+	
 	Napisaæ readme2.txt bez polskich znaków - dopiero, gdy pewne jest, ¿e readme.txt nie ulegnie zmianom.
 	
 Wykonane:
@@ -104,7 +107,6 @@ void zapisz_uklad(char **T, int xT, int yT, char *awaria);
 void zwolnij_pamiec(char **T, int yT);
 void wypisz_komunikat_o_awarii(char awaria);
 void wypisz_komunikat_zakonczenia();
-
 int jest4849(char znak);
 char TT(int Xc, int Yc, char **T, int xT, int yT, int x0, int y0); /* odczytuje element tablicy lub pustkê poza ni¹ */
 int ile_populacja(char **T, int xT, int yT);
@@ -123,6 +125,12 @@ char** zmniejsz_rozmiar_planszy(char **D, int *xT, int *yT, int *x0, int *y0, ch
 /* obcina planszê zostawiaj¹c margines pustki równy marginesowi dodawanemu. Wywo³ywaæ np. co 100 kroków. */
 void zmien_stan_komorki(char ***T, char ***P, int *xT, int *yT, int *x0, int *y0, int xkur, int ykur, char *awaria);
 void wykonaj_krok(char ***T, char ***P, int *xT, int *yT, int *x0, int *y0, char ZSD[], char *awaria);
+int czy_w_lewo(unsigned char komunikacja);
+int czy_w_prawo(unsigned char komunikacja);
+int czy_w_gore(unsigned char komunikacja);
+int czy_w_dol(unsigned char komunikacja);
+int czy_klawisz_U(unsigned char komunikacja);
+void wykonaj_krok_2(char ***T, char ***P, int *xT, int *yT, int *x0, int *y0, char ZSD[], char *awaria, int *czas);
 
 int main(int agrc, char *argv[])
 {
@@ -153,19 +161,19 @@ int main(int agrc, char *argv[])
 				{
 					wyswietl(T,xT,yT,x0,y0,xkur,ykur,skala_tempa,dystans,czas);
 					komunikacja=nacisniecie_przycisku();
-					if ((komunikacja==KLAWISZ_STRZALKA_W_LEWO) || (komunikacja==KLAWISZ_A) || (komunikacja==KLAWISZ_a))
+					if (czy_w_lewo(komunikacja))
 					{
 						xkur-=dystans;
 					}
-					else if ((komunikacja==KLAWISZ_STRZALKA_W_PRAWO) || (komunikacja==KLAWISZ_D) || (komunikacja==KLAWISZ_d))
+					else if (czy_w_prawo(komunikacja))
 					{
 						xkur+=dystans;
 					}
-					else if ((komunikacja==KLAWISZ_STRZALKA_W_GORE) || (komunikacja==KLAWISZ_W) || (komunikacja==KLAWISZ_w))
+					else if (czy_w_gore(komunikacja))
 					{
 						ykur+=dystans;
 					}
-					else if ((komunikacja==KLAWISZ_STRZALKA_W_DOL) || (komunikacja==KLAWISZ_S) || (komunikacja==KLAWISZ_s))
+					else if (czy_w_dol(komunikacja))
 					{
 						ykur-=dystans;
 					}
@@ -173,7 +181,7 @@ int main(int agrc, char *argv[])
 					{
 						zmien_skale_tempa(&skala_tempa);
 					}
-					else if ((komunikacja==KLAWISZ_U) || (komunikacja==KLAWISZ_u))
+					else if (czy_klawisz_U(komunikacja))
 					{
 						zmien_dystans(&dystans);
 					}
@@ -183,17 +191,42 @@ int main(int agrc, char *argv[])
 					}
 					else if (komunikacja==KLAWISZ_SPACJA)
 					{
-						wykonaj_krok(&T,&P,&xT,&yT,&x0,&y0,ZSD,&awaria);
-						czas++;
-						if ((czas%100)==0)
-						{
-							if (awaria==0) T=zmniejsz_rozmiar_planszy(T,&xT,&yT,&x0,&y0,&awaria);
-							if (awaria==0) P=zmniejsz_rozmiar_planszy(P,&xT,&yT,&x0,&y0,&awaria);
-						}
+						wykonaj_krok_2(&T,&P,&xT,&yT,&x0,&y0,ZSD,&awaria,&czas);
 					}
 					else if (komunikacja==KLAWISZ_ENTER)
 					{
-						/* gdzies brakuje do {if(kbhit()){} }while(komunikacja!=KLAWISZ_ENTER); */
+						komunikacja=KLAWISZ_T; /* ustawienie na dowolne inne makro */
+						do
+						{
+							/* t1= */
+							wykonaj_krok_2(&T,&P,&xT,&yT,&x0,&y0,ZSD,&awaria,&czas);
+							/* t2= */
+							/* sleep */
+							if (kbhit())
+							{
+								komunikacja=nacisniecie_przycisku();
+								if (czy_klawisz_U(komunikacja))
+								{
+									zmien_dystans(&dystans);
+								}
+								else if (czy_w_lewo(komunikacja))
+								{
+									xkur-=dystans;
+								}
+								else if (czy_w_prawo(komunikacja))
+								{
+									xkur+=dystans;
+								}
+								else if (czy_w_gore(komunikacja))
+								{
+									ykur+=dystans;
+								}
+								else if (czy_w_dol(komunikacja))
+								{
+									ykur-=dystans;
+								}
+							}
+						} while (komunikacja!=KLAWISZ_ENTER && awaria==0);
 					}
 				} while (komunikacja!=KLAWISZ_ESC && awaria==0);
 				if (awaria==0) T=zmniejsz_rozmiar_planszy_maksymalnie(T,&xT,&yT,&x0,&y0,&awaria);
@@ -790,5 +823,46 @@ void wykonaj_krok(char ***T, char ***P, int *xT, int *yT, int *x0, int *y0, char
 			*P=*T;
 			*T=zamiana;
 		}
+	}
+}
+
+int czy_w_lewo(unsigned char komunikacja)
+{
+	if ((komunikacja==KLAWISZ_STRZALKA_W_LEWO) || (komunikacja==KLAWISZ_A) || (komunikacja==KLAWISZ_a)) return 1;
+	return 0;
+}
+
+int czy_w_prawo(unsigned char komunikacja)
+{
+	if ((komunikacja==KLAWISZ_STRZALKA_W_PRAWO) || (komunikacja==KLAWISZ_D) || (komunikacja==KLAWISZ_d)) return 1;
+	return 0;
+}
+
+int czy_w_gore(unsigned char komunikacja)
+{
+	if ((komunikacja==KLAWISZ_STRZALKA_W_GORE) || (komunikacja==KLAWISZ_W) || (komunikacja==KLAWISZ_w)) return 1;
+	return 0;
+}
+
+int czy_w_dol(unsigned char komunikacja)
+{
+	if ((komunikacja==KLAWISZ_STRZALKA_W_DOL) || (komunikacja==KLAWISZ_S) || (komunikacja==KLAWISZ_s)) return 1;
+	return 0;
+}
+
+int czy_klawisz_U(unsigned char komunikacja)
+{
+	if ((komunikacja==KLAWISZ_U) || (komunikacja==KLAWISZ_u)) return 1;
+	return 0;
+}
+
+void wykonaj_krok_2(char ***T, char ***P, int *xT, int *yT, int *x0, int *y0, char ZSD[], char *awaria, int *czas)
+{
+	wykonaj_krok(T,P,xT,yT,x0,y0,ZSD,awaria);
+	*czas=(*czas)+1;
+	if (((*czas)%100)==0)
+	{
+		if (*awaria==0) *T=zmniejsz_rozmiar_planszy(*T,xT,yT,x0,y0,awaria);
+		if (*awaria==0) *P=zmniejsz_rozmiar_planszy(*P,xT,yT,x0,y0,awaria);
 	}
 }
