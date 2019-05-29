@@ -3,8 +3,6 @@ PLAN REALIZACJI PROJEKTU
 Niewykonane:
 	
 	G³ównie zosta³o:
-		- napisanie funkcji wykonuj¹cych alokacjê/dealokacjê pamiêci - jeszcze nie commitowalem ich i trzeba je przejrzec
-		- sprobuj alokowac pamiec (przy wczytywaniu danych) za pomoca innej funkcji (wywolaj inna)
 		- dodanie reakcji na przycisk O (zmiana stanu komórki w edytorze)
 		- napisanie funkcji wykonujacej krok - musi przekazywaæ wskaŸnik na wskaŸnik przez wskaŸnik (char ***T_adres)
 				Porada: krok iteracyjny automatu jednak powinien byc wykonywany w osobnej funkcji, ale bez alokowania pamieci co chwila
@@ -47,6 +45,8 @@ Wykonane:
 	- dodanie tablicy pomocniczej, jej przydzial pamieci, obsluga jej bledow
 	- dodanie prostych reakcji na przyciski (na lokalnych zmiennych funkcji main) - za pomoca pojedynczych instrukcji
 	- dodanie zlozonych reakcji (dzialanie zasad automatu zmiana tempa z 1x na 4x czyli 4Hz itp., zmiana dystansu)
+	- napisanie funkcji wykonuj¹cych alokacjê/dealokacjê pamiêci
+	- sprobuj alokowac pamiec (przy wczytywaniu danych) za pomoca innej funkcji (wywolaj inna)
 
 
 Nigdy nie "commituj" pliku wykonywalnego ani pliku 000commit.txt zawieraj¹cego opis commita.
@@ -277,54 +277,26 @@ char** wczytaj_uklad(int *xT, int *yT, char *awaria)
 		{
 			*xT=dlugosc_linii;
 			*yT=dlugosc_pliku/dlugosc_linii; /* zawsze bedzie > 0, brak bledu */
-			D=malloc((*yT)*sizeof(char*));
-			if (D==NULL) przydzial_udany=0;
-			if (przydzial_udany)
-			{
-				for (i=0;i<(*yT);i++)
+			D=przydziel_pamiec_tablicy_pomocniczej(*xT,*yT,awaria);
+			if (D!=NULL)
+			{	
+				fseek(plik_danych,0,SEEK_SET);
+				i=(*yT)-1;
+				x=0;
+				do
 				{
-					*(D+i)=NULL;
-					*(D+i)=malloc((*xT)*sizeof(char));
-					if ((*(D+i))==NULL) przydzial_udany=0;
-				}
-				if (przydzial_udany)
-				{
-					for (x=0;x<(*xT);x++)
+					znak=fgetc(plik_danych);
+					if (jest4849(znak))
 					{
-						for (y=0;y<(*yT);y++)
+						*(*(D+i)+x)=znak-48;
+						x++;
+						if (x==(*xT))
 						{
-							*(*(D+y)+x)=0;
+							x=0;
+							i--;
 						}
 					}
-					fseek(plik_danych,0,SEEK_SET);
-					i=(*yT)-1;
-					x=0;
-					do
-					{
-						znak=fgetc(plik_danych);
-						if (jest4849(znak))
-						{
-							*(*(D+i)+x)=znak-48;
-							x++;
-							if (x==(*xT))
-							{
-								x=0;
-								i--;
-							}
-						}
-					} while ((znak!=EOF) && (!feof(plik_danych)) && (i>-1));
-				}
-				else
-				{
-					*awaria=34;
-					zwolnij_pamiec(D,*yT);
-					D=NULL;
-				}
-				
-			}
-			else
-			{
-				*awaria=34;
+				} while ((znak!=EOF) && (!feof(plik_danych)) && (i>-1));
 			}
 		}
 		else
