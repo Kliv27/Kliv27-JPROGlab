@@ -15,6 +15,7 @@ Niewykonane:
 	Warunkowo zdefiniuj dzielnik, jeœli funkcje sleep() wymagaj¹ innych jednostek. Mo¿esz u¿ywaæ ró¿nic czasu z <time.h>
 	
 	Mo¿na znacznie lepiej skomentowaæ kod, ale nie trzeba.
+	Przyda siê usun¹æ niektóre komentarze z kodu na koniec.
 	Poprawiæ zwrot "raczej zadzia³a" w readme.txt - pod wzglêdem treœci.
 	Napisaæ readme2.txt bez polskich znaków - dopiero, gdy pewne jest, ¿e readme.txt nie ulegnie zmianom.
 	Usun¹æ PLAN REALIZACJI PROJEKTU z kodu po jego ukoñczeniu.
@@ -454,7 +455,7 @@ char TT(int Xc, int Yc, char **T, int xT, int yT, int x0, int y0)
 	int taby;
 	tabx=x0+Xc; /* polozenie kartezjanskich Xc Yc we wspolrzednych tablicowych*/
 	taby=y0+Yc;
-	if ((tabx>0) && (taby>0) && (tabx<xT) && (taby<yT)) {return (*(*(T+taby)+tabx));}
+	if ((tabx>=0) && (taby>=0) && (tabx<xT) && (taby<yT)) {return (*(*(T+taby)+tabx));}
 	return 0; /* poza tablic¹ jest bezkresna pustka */
 }
 
@@ -509,6 +510,7 @@ float tempo(int skala_tempa)
 
 void wyswietl(char **T, int xT, int yT, int x0, int y0, int xkur, int ykur, int skala_tempa, int dystans, int czas)
 {
+	/* chyba dzia³a œwetnie */
 	int i, j, imin, imax, jmin, jmax, pomx, pomy;
 	/* kursor wzgledem ekranu jest na: (30, 30) */
 	pomx=(x_ekran-1)/2;
@@ -559,6 +561,7 @@ void wyswietl(char **T, int xT, int yT, int x0, int y0, int xkur, int ykur, int 
 
 char** przydziel_pamiec_tablicy_pomocniczej(int xT, int yT, char *awaria)
 {
+	/* na testach zdaje siê dzia³aæ dobrze */
 	char **P=NULL;
 	int i, j, przydzial_udany=1;
 	P=malloc(yT*sizeof(char*));
