@@ -14,8 +14,10 @@ Niewykonane:
 	mogê przenieœæ czêœæ kodu (pojedyncze wywo³ania funkcji np. sleep) do plików .c i includowaæ je warunkowo wewn¹trz kodu
 	Warunkowo zdefiniuj dzielnik, jeœli funkcje sleep() wymagaj¹ innych jednostek. Mo¿esz u¿ywaæ ró¿nic czasu z <time.h>
 	
+	Mo¿na znacznie lepiej skomentowaæ kod, ale nie trzeba.
 	Poprawiæ zwrot "raczej zadzia³a" w readme.txt - pod wzglêdem treœci.
 	Napisaæ readme2.txt bez polskich znaków - dopiero, gdy pewne jest, ¿e readme.txt nie ulegnie zmianom.
+	Usun¹æ PLAN REALIZACJI PROJEKTU z kodu po jego ukoñczeniu.
 	
 Wykonane:
 	Rezygnujê z wieloœci kolorów.
@@ -266,6 +268,7 @@ int main(int agrc, char *argv[])
 
 void wczytaj_zasady(char ZSD[], char *awaria)
 {
+	/* funkcja zostala przetestowana i dziala swietnie */
 	int i=0;
 	FILE *plik_zasad=NULL;
 	char znak[3]={48,48,48};
@@ -300,6 +303,7 @@ void wczytaj_zasady(char ZSD[], char *awaria)
 
 char** wczytaj_uklad(int *xT, int *yT, char *awaria)
 {
+	/* funkcja zostala przetestowana i dziala swietnie */
 	char **D=NULL;
 	int i, x, y, przydzial_udany=1;
 	int dlugosc_linii=-1, dlugosc_pliku=0;
@@ -359,19 +363,20 @@ char** wczytaj_uklad(int *xT, int *yT, char *awaria)
 
 void zapisz_uklad(char **T, int xT, int yT, char *awaria)
 {
+	/* naprawiono i przetestowano - poprzednio odwraca³a wzglêdem OX */
 	int x, y;
 	FILE *plik_wyjsciowy=NULL;
 	char znak;
 	plik_wyjsciowy=fopen("out.txt","w");
 	if (plik_wyjsciowy!=NULL)
 	{
-		for (y=0;y<yT;y++)
+		for (y=yT-1;y>=0;y--)
 		{
 			for (x=0;x<xT;x++)
 			{
 				fputc(48+(*(*(T+y)+x)),plik_wyjsciowy);
 			}
-			fputc('\n',plik_wyjsciowy); /* na wiki pisza, ze \n samo sie zmieni na \r\n pod Windows, Linux - \n dziala najzwyczajniej */
+			if (y!=0) fputc('\n',plik_wyjsciowy); /* na wiki pisza, ze \n samo sie zmieni na \r\n pod Windows, Linux - \n dziala najzwyczajniej */
 		}
 	}
 	else
@@ -424,6 +429,9 @@ void wypisz_komunikat_o_awarii(char awaria)
 			fprintf(stderr, "Wystapil nieznany blad. Program zostanie zamkniety.\n");
 		}
 	}
+	fprintf(stderr, "\nNacisnij dowolny przycisk, aby kontynuowac....\n");
+	fflush(stdin);
+	getch();
 }
 
 void wypisz_komunikat_zakonczenia()
