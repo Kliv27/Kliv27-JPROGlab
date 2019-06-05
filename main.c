@@ -3,11 +3,7 @@ PLAN REALIZACJI PROJEKTU
 Niewykonane:
 	
 	G³ównie zosta³o:
-	Od teraz samo wyjœcie poza tablicê nie wywala programu - przydzia³ dynamiczny œwietnie dzia³a, zapisywanie wyniku te¿ - przetestowane.
-	- sprawiæ, aby funkcja wykonania kroku nie wywala³a programu - trzeba do tego przejrzec dokladnie wiele funkcji
-	Czy aby na pewno obydwie tablice g³ówne s¹ traktowane symetrycznie co do zmian ich rozmiaru? Wywo³anie tych samych funkcji nie wystarczy, bo mog¹ zmieniæ go inaczej.
-	
-	- kroki automatyczne (ENTER) - dopracowanie
+	- kroki automatyczne (ENTER) - dopracowanie:
 	U¿yj time_t do tego zeby kontrolowac ((dopelnienie roznicy t2-t1)+(t2-t1) = dlugosc_kroku) i sleep(dopelnienie roznicy) )
 	
 	Sprawdziæ, czy system("cls"); dzia³a pod Linuxem - poszukaæ odpowiedników.
@@ -58,7 +54,9 @@ Wykonane:
 		Porada: krok iteracyjny automatu jednak powinien byc wykonywany w osobnej funkcji, ale bez alokowania pamieci co chwila
 		stworz tablice w funkcji glownej i ona zawiera nowy stan i zamien wskazniki
 	- wywolanie funkcji dealokujacej nadmiar pamieci np. co 100 kroków
-
+	Od teraz samo wyjœcie poza tablicê nie wywala programu - przydzia³ dynamiczny œwietnie dzia³a, zapisywanie wyniku te¿ - przetestowane.
+	- sprawiæ, aby funkcja wykonania kroku nie wywala³a programu - trzeba do tego przejrzec dokladnie wiele funkcji
+	Czy aby na pewno obydwie tablice g³ówne s¹ traktowane symetrycznie co do zmian ich rozmiaru? Teraz ju¿ wygl¹da na to, ¿e tak, bo program dzia³a prawid³owo.
 
 Nigdy nie "commituj" pliku wykonywalnego ani pliku 000commit.txt zawieraj¹cego opis commita.
 
@@ -797,28 +795,25 @@ void zmien_stan_komorki(char ***T, char ***P, int *xT, int *yT, int *x0, int *y0
 
 void wykonaj_krok(char ***T, char ***P, int *xT, int *yT, int *x0, int *y0, char ZSD[], char *awaria)
 {
-	int czy_u=0, czy_d=0, czy_l=0, czy_r=0, i, j, v, w, suma, zywa;
+	int czy_u=0, czy_d=0, czy_l=0, czy_r=0, i, j, v, w, suma, zywa, stareyT;
 	char **zamiana;
+	
+	stareyT=(*yT);
 	for (i=0;i<(*xT);i++)
 	{
 		if (*(*(*T+0)+i)==1) czy_d=1;
-	}
-	for (i=0;i<(*xT);i++)
-	{
 		if (*(*(*T+(*yT)-1)+i)==1) czy_u=1;
 	}
 	for (i=0;i<(*yT);i++)
 	{
 		if (*(*(*T+i)+0)==1) czy_l=1;
-	}
-	for (i=0;i<(*yT);i++)
-	{
 		if (*(*(*T+i)+(*xT)-1)==1) czy_r=1;
 	}
 	*T=zwieksz_rozmiar_planszy(*T,xT,yT,x0,y0,awaria,czy_u?stand_margin_pustki:0,czy_l?stand_margin_pustki:0,czy_r?stand_margin_pustki:0,czy_d?stand_margin_pustki:0);
 	if (*awaria==0)
 	{
-		*P=zwieksz_rozmiar_planszy(*P,xT,yT,x0,y0,awaria,czy_u?stand_margin_pustki:0,czy_l?stand_margin_pustki:0,czy_r?stand_margin_pustki:0,czy_d?stand_margin_pustki:0);
+		zwolnij_pamiec(*P,stareyT);
+		*P = przydziel_pamiec_tablicy_pomocniczej(*xT,*yT,awaria);
 		if (*awaria==0)
 		{
 			/*
@@ -881,11 +876,18 @@ int czy_klawisz_U(unsigned char komunikacja)
 
 void wykonaj_krok_2(char ***T, char ***P, int *xT, int *yT, int *x0, int *y0, char ZSD[], char *awaria, int *czas)
 {
+	int stareyT;
+	
+	stareyT=(*yT);
 	wykonaj_krok(T,P,xT,yT,x0,y0,ZSD,awaria);
 	*czas=(*czas)+1;
 	if (((*czas)%100)==0)
 	{
 		if (*awaria==0) *T=zmniejsz_rozmiar_planszy(*T,xT,yT,x0,y0,awaria);
-		if (*awaria==0) *P=zmniejsz_rozmiar_planszy(*P,xT,yT,x0,y0,awaria); /* blad koncepcyjny - funkcja zadzialaja inaczej na obie tablice */
+		if (*awaria==0)
+		{
+			zwolnij_pamiec(*P,stareyT);
+			*P = przydziel_pamiec_tablicy_pomocniczej(*xT,*yT,awaria);
+		}
 	}
 }
