@@ -2,7 +2,7 @@ Program umo¿liwia symulowanie w konsoli (na systemach z rodziny Windows i Linux 
 - s¹ dwuwymiarowe (dwa wymiary przestrzenne i czas);
 - komórki s¹ u³o¿one w s¹siedztwie Moore'a (ka¿da ma 8 s¹siadów);
 - komórki mog¹ znajdowaæ siê w dwóch stanach (martwym - 0, ¿ywym - 1);
-- przysz³y stan komórki zale¿y wy³¹cznie od jej stanu obecnego oraz od ³¹cznej liczby jej ¿ywych s¹siadów - te parametry wraz z zestawem zasad okreœlaj¹ w sposób jednoznaczny jej stan przysz³y;
+- przysz³y stan komórki zale¿y wy³¹cznie od jej stanu obecnego oraz od ³¹cznej liczby jej ¿ywych s¹siadów - te wartoœci wraz z zestawem zasad okreœlaj¹ w sposób jednoznaczny jej stan przysz³y;
 
 Specyfikacja zadania programu:
    Dane wejœciowe:
@@ -14,11 +14,11 @@ W trakcie dzia³ania programu mo¿liwe jest modyfikowanie stanu aktualnego przy po
 
 Ile ³¹cznie jest takich automatów komórkowych? Mo¿na to ³atwo policzyæ:
 Dana komórka mo¿e siê znajdowaæ w dwóch stanach - dwie mo¿liwoœci.
-Spoœród 8 jej s¹siadów najmniejsza liczba ¿ywych komórek to 0 a najwy¿sza to 8 - razem 9 mo¿liwoœci.
+Spoœród 8 jej s¹siadów najmniejsza mo¿liwa liczba ¿ywych komórek to 0 a najwiêksza to 8 - razem 9 mo¿liwoœci.
 Oba powy¿sze zdarzenia s¹ niezale¿ne, wiêc ³¹czna liczba ich mo¿liwoœci to 2 x 9 = 18
 Zatem dla 18 ró¿nych sytuacji w jakich mo¿e siê znaleŸæ komórka zestaw zasad przypisuje pewien wynik (stan komórki w nastêpnym kroku). Mo¿liwe s¹ dwa stany: komórka martwa (0) lub ¿ywa (1). Wobec tego ³¹czna liczba sposobów dobrania tych 18 zasad to 2 do potêgi 18, czyli 262144.
 
-Po³owa z nich przyporz¹tkowuje martwej komórce z oœmioma martwymi s¹siadami komórkê ¿yw¹. Oznacza to, ¿e pusta przestrzeñ ulega samowype³nieniu. Jest to niedopuszczalne z przyczyn obliczeniowych, poniewa¿ program musi alokowaæ dynamicznie pamiêæ w taki sposób, aby wszystkie ¿ywe komórki mieœci³y siê w strefie dostêpnej pamiêci. Wobec tego - aby unikn¹æ problemów - zasada d0 zawsze bêdzie przez program ustawiana na 0, niezale¿nie od danych wejœciowych. Symulowanie czêœci pozosta³ych 131072 automatów komórkowych mo¿na realizowaæ poprzez odwrócenie zasad - nale¿y traktowaæ komórki ¿ywe jak martwe a martwe jak ¿ywe przy ustawieniu regu³.
+Po³owa z nich przyporz¹dkowuje martwej komórce z oœmioma martwymi s¹siadami komórkê ¿yw¹. Oznacza to, ¿e pusta przestrzeñ ulega samowype³nieniu. Jest to niedopuszczalne z przyczyn obliczeniowych, poniewa¿ program musi alokowaæ dynamicznie pamiêæ w taki sposób, aby wszystkie ¿ywe komórki mieœci³y siê w strefie dostêpnej pamiêci. Wobec tego - aby unikn¹æ problemów - zasada d0 zawsze bêdzie przez program ustawiana na 0, niezale¿nie od danych wejœciowych. Symulowanie czêœci pozosta³ych 131072 automatów komórkowych mo¿na realizowaæ poprzez odwrócenie zasad - nale¿y traktowaæ komórki ¿ywe jak martwe a martwe jak ¿ywe przy ustawieniu regu³.
 
 Wszelkie pliki powi¹zane z programem musz¹ znajdowaæ siê w tym samym katalogu co plik wykonywalny.
 Dane wejœciowe dla programu przechowywane s¹ w dwóch plikach. Pierwszym z nich jest zasady.txt. Zawiera on zestaw zasad postaci:
@@ -29,7 +29,8 @@ gdzie:
 "X" jest liczb¹ ca³kowit¹ równ¹ 0 lub 1;
 an - okreœla stan komórki ¿ywej w nastêpnym kroku, jeœli ma ona n ¿ywych s¹siadów w kroku obecnym;
 dn - okreœla stan komórki martwej w nastêpnym kroku, jeœli ma ona n ¿ywych s¹siadów w kroku obecnym;
-Przyk³adowa zawartoœæ pliku zasady.txt przedstawiona jest poni¿ej, miêdzy znakami ------- (w przyk³adzie poni¿ej s¹ ustawione zasady Gry w ¯ycie John'a Conway'a bêd¹cej jedynie jedn¹ z kilkuset tysiêcy mo¿liwoœci programu):
+Zasady musz¹ byæ przedstawione w œciœle okreœlonej kolejnoœci - takiej, jak w niniejszym przyk³adzie.
+Przyk³adowa zawartoœæ pliku zasady.txt przedstawiona jest poni¿ej, miêdzy znakami ------- (w poni¿szym przyk³adzie ustawione s¹ zasady Gry w ¯ycie John'a Conway'a bêd¹cej jedynie jedn¹ z kilkuset tysiêcy mo¿liwoœci programu):
 --------------------------------------------
 a0: 0
 a1: 0
@@ -84,10 +85,10 @@ Na marginesie poza plansz¹ w prawym górnym rogu widoczne s¹ wartoœci opisuj¹ce b
 Wspó³rzêdne kartezjañskie jednoznacznie identyfikuj¹ komórkê w przestrzeni - jest ona powi¹zana ze swoimi przesz³ymi i przysz³ymi stanami. Dziêki nim mo¿na okreœliæ to, jak uk³ad komórek (np. statek) siê przemieœci³.
 
 STEROWANIE:
-przyciski WASD lub strza³ki - do przemieszczania widoku (i kursora) po wirtualnym œwiecie;
-przycisk ESC - do zakoñczenia pracy programu (stan koñcowy zostanie zapisany automatycznie);
+przyciski WASD lub strza³ki - do przemieszczania widoku (i kursora) po wirtualnym œwiecie, dzia³aj¹ równie¿ w trybie automatycznym;
+przycisk ESC - do zakoñczenia pracy programu (stan koñcowy zostanie zapisany automatycznie) - wymaga zatrzymania symulacji (wy³¹czenia trybu automatycznego);
 przycisk SPACJA - wykonanie jednego kroku czasowego;
 przycisk ENTER - przejœcie miêdzy stanem EDYCJI (pauzy) a stanem ci¹g³ego automatycznego wykonywania kroków przez program;
-przycisk T - zmiana tempa (d³ugoœci czasu rzeczywistego przeznaczonego na jeden krok czasowy automatu);
-przycisk U - zmiana dystansu, na jaki przemieszcza siê perspektywa/kursor;
-przycisk O - zmiana stanu komórki pod kursorem w trybie edycji;
+przycisk T - zmiana tempa (d³ugoœci czasu rzeczywistego przeznaczonego na jeden krok czasowy automatu) - przycisk nie jest mo¿liwy do u¿ycia w trakcie dzia³ania trybu automatycznego - naciœniêcie go niczego nie spowoduje;
+przycisk U - zmiana dystansu, na jaki przemieszcza siê perspektywa/kursor - mo¿na u¿ywaæ w trybie automatycznym;
+przycisk O - zmiana stanu komórki pod kursorem w trybie edycji - nie mo¿liwe do u¿ycia w trybie automatycznym;

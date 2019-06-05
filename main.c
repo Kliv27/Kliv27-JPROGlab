@@ -14,17 +14,18 @@ Niewykonane:
 	mogê przenieœæ czêœæ kodu (pojedyncze wywo³ania funkcji np. sleep) do plików .c i includowaæ je warunkowo wewn¹trz kodu
 	Warunkowo zdefiniuj dzielnik, jeœli funkcje sleep() wymagaj¹ innych jednostek. Mo¿esz u¿ywaæ ró¿nic czasu z <time.h>
 	
+	Poprawiæ zwrot "raczej zadzia³a" w readme.txt - pod wzglêdem treœci.
 	Napisaæ readme2.txt bez polskich znaków - dopiero, gdy pewne jest, ¿e readme.txt nie ulegnie zmianom.
 	
 Wykonane:
 	Rezygnujê z wieloœci kolorów.
 	SprawdŸ czy polskie znaki dzia³aj¹ pod innym systemem operacyjnym. Wyniki eksperymentu:
-		na Windowsie wszysko dzia³aja
+		na Windowsie wszystkie dzia³aja
 		w paiza.io nie dzia³a
 		na Linuxie - napisany program testowy z polskimi znakami wykaza³, ¿e znaki z mojego programu tworzone t¹ metod¹ nie zadzia³aj¹ na Linuxie -
 	Wobec tego rezygnujê z polskich znaków w programie.
 	Sprawdzono wymiary (w liczbie znaków) dostêpne w konsoli do wyœwietlania pracy programu.
-	Wyniki: Programu konsolowe w Windows: maksymalna szerokoœæ 80, wysokoœæ jest wiêksza. Parametry te s¹ niezale¿ne od systemu a od wyœwietlanej konsoli. Mog¹ byæ zatem wiêksze.
+	Wyniki: Programy konsolowe w Windows: maksymalna szerokoœæ 80, wysokoœæ jest wiêksza. Parametry te s¹ niezale¿ne od systemu, natomiast zale¿¹ od wyœwietlanej konsoli. Mog¹ zatem byæ wiêksze.
 	Opisz program ogólnie w pliku readme.txt. Okreœl specyfikacjê zadania i dane wejœciowe.
 	Dodaj nazwy plików wynikowych i plików danych wejœciowych do readme.txt i opisz standard ich zawartoœci.
 	Do pliku readme.txt dodaj wyjaœnienia planowanych oznaczeñ komórek w programie:
@@ -34,7 +35,7 @@ Wykonane:
 	'X' - 
 	Dodaj instrukcjê u¿ycia programu - nie wewn¹trz jego samego.
 	WASD / strza³ki - zmiana perspektywy, np. o 20 pól, przycisk zmiany wielkoœci kroku przesuwania - 1, 10, 20 .. 60 z wyœwietleniem aktualnej wartoœci na marginesie
-	U¿ytkownik mo¿e zmieniaæ minimaln¹ d³ugoœæ kroku czasowego w ENTER-auto, SPACJA-krok.
+	U¿ytkownik mo¿e zmieniaæ minimaln¹ d³ugoœæ kroku czasowego wy³¹cznie wtedy, gdy tryb automatyczny jest wy³¹czony.
 	Dodaj (do instrukcji) przycisk zmiany d³ugoœci jednego kroku z wyœwietlaniem na marginesie. Mo¿na te¿ wyœwietlaæ liczebnoœæ populacji, po³o¿enie kursora itp.
 	W przyk³adach poka¿ zasady gry w ¿ycie Conway'a oraz Gosper Glider Gun. Niech bêd¹ równie¿ pocz¹tkowymi zawartoœciami plików wejœciowych.
 	pamiêtaj: d0 musi zasze wynosiæ 0, aby pusta przestrzeñ nie ulega³a samowype³nieniu.
