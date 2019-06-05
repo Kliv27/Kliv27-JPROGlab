@@ -3,7 +3,9 @@ PLAN REALIZACJI PROJEKTU
 Niewykonane:
 	
 	G³ównie zosta³o:
+	Od teraz samo wyjœcie poza tablicê nie wywala programu - przydzia³ dynamiczny œwietnie dzia³a, zapisywanie wyniku te¿ - przetestowane.
 	- sprawiæ, aby funkcja wykonania kroku nie wywala³a programu - trzeba do tego przejrzec dokladnie wiele funkcji
+	Czy aby na pewno obydwie tablice g³ówne s¹ traktowane symetrycznie co do zmian ich rozmiaru? Wywo³anie tych samych funkcji nie wystarczy, bo mog¹ zmieniæ go inaczej.
 	
 	- kroki automatyczne (ENTER) - dopracowanie
 	U¿yj time_t do tego zeby kontrolowac ((dopelnienie roznicy t2-t1)+(t2-t1) = dlugosc_kroku) i sleep(dopelnienie roznicy) )
@@ -619,6 +621,7 @@ void zmien_dystans(int *wsk_dystans)
 
 char** zmniejsz_rozmiar_planszy_maksymalnie(char **D, int *xT, int *yT, int *x0, int *y0, char *awaria)
 {
+	/* przetestowana, prawopodobnie bezb³êdna */
 	int wciecie_u=0, wciecie_d=0, wciecie_l=0, wciecie_r=0;
 	int i, j, logika, stareyT;
 	char **N=NULL;
@@ -711,6 +714,7 @@ char** zmniejsz_rozmiar_planszy_maksymalnie(char **D, int *xT, int *yT, int *x0,
 
 char** zwieksz_rozmiar_planszy(char **D, int *xT, int *yT, int *x0, int *y0, char *awaria, int u, int l, int r, int d)
 {
+	/* przetestowana, œwietnie dzia³a */
 	int i, j, stareyT=(*yT);
 	char **N=NULL;
 	N=przydziel_pamiec_tablicy_pomocniczej((*xT)+l+r,(*yT)+u+d,awaria);
@@ -747,18 +751,20 @@ void zmien_stan_komorki(char ***T, char ***P, int *xT, int *yT, int *x0, int *y0
 	/* *(*(*T+y)+x) */
 	
 	/* prostokat: (-x0,-y0) w kartez. lewy dolny róg prostok¹ta, a prawy górny (-x0+xT-1,-y0+yT-1) */
+	int stareyT, dokonano_zmiany=0;
+	stareyT=(*yT);
 	
 	if (xkur>((-1)*(*x0)+(*xT)-1))
 	{
 		*T=zwieksz_rozmiar_planszy(*T,xT,yT,x0,y0,awaria,0,0,xkur+(*x0)-(*xT)+1+stand_margin_pustki,0);
-		if (*awaria==0) *P=zwieksz_rozmiar_planszy(*P,xT,yT,x0,y0,awaria,0,0,xkur+(*x0)-(*xT)+1+stand_margin_pustki,0);
+		dokonano_zmiany=1;
 	}
 	else
 	{
 		if (xkur<((-1)*(*x0)))
 		{
 			*T=zwieksz_rozmiar_planszy(*T,xT,yT,x0,y0,awaria,0,(-1)*(*x0)-xkur+stand_margin_pustki,0,0);
-			if (*awaria==0) *P=zwieksz_rozmiar_planszy(*P,xT,yT,x0,y0,awaria,0,(-1)*(*x0)-xkur+stand_margin_pustki,0,0);
+			dokonano_zmiany=1;
 		}
 	}
 	if (*awaria==0)
@@ -766,20 +772,25 @@ void zmien_stan_komorki(char ***T, char ***P, int *xT, int *yT, int *x0, int *y0
 		if (ykur>((-1)*(*y0)+(*yT)-1))
 		{
 			*T=zwieksz_rozmiar_planszy(*T,xT,yT,x0,y0,awaria,ykur+(*y0)-(*yT)+1+stand_margin_pustki,0,0,0);
-			if (*awaria==0) *P=zwieksz_rozmiar_planszy(*P,xT,yT,x0,y0,awaria,ykur+(*y0)-(*yT)+1+stand_margin_pustki,0,0,0);
+			dokonano_zmiany=1;
 		}
 		else
 		{
 			if (ykur<((-1)*(*y0)))
 			{
 				*T=zwieksz_rozmiar_planszy(*T,xT,yT,x0,y0,awaria,0,0,0,(-1)*(*y0)-ykur+stand_margin_pustki);
-				if (*awaria==0) *P=zwieksz_rozmiar_planszy(*P,xT,yT,x0,y0,awaria,0,0,0,(-1)*(*y0)-ykur+stand_margin_pustki);
+				dokonano_zmiany=1;
 			}
 		}
 		if (*awaria==0)
 		{
 			if ((*(*(*T+(*y0)+ykur)+(*x0)+xkur))==1) (*(*(*T+(*y0)+ykur)+(*x0)+xkur))=0;
 			else (*(*(*T+(*y0)+ykur)+(*x0)+xkur))=1;
+			if (*awaria==0 && dokonano_zmiany)
+			{
+				zwolnij_pamiec(*P,stareyT);
+				*P = przydziel_pamiec_tablicy_pomocniczej(*xT,*yT,awaria);
+			}
 		}
 	}
 }
@@ -875,6 +886,6 @@ void wykonaj_krok_2(char ***T, char ***P, int *xT, int *yT, int *x0, int *y0, ch
 	if (((*czas)%100)==0)
 	{
 		if (*awaria==0) *T=zmniejsz_rozmiar_planszy(*T,xT,yT,x0,y0,awaria);
-		if (*awaria==0) *P=zmniejsz_rozmiar_planszy(*P,xT,yT,x0,y0,awaria);
+		if (*awaria==0) *P=zmniejsz_rozmiar_planszy(*P,xT,yT,x0,y0,awaria); /* blad koncepcyjny - funkcja zadzialaja inaczej na obie tablice */
 	}
 }
