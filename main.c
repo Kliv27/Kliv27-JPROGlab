@@ -116,11 +116,21 @@ endif
 #define liczba_zasad_2 18
 #define stand_margin_pustki 20
 
-#define KLAWISZ_STRZALKI 224
-#define KLAWISZ_STRZALKA_W_LEWO 75
-#define KLAWISZ_STRZALKA_W_PRAWO 77
-#define KLAWISZ_STRZALKA_W_GORE 72
-#define KLAWISZ_STRZALKA_W_DOL 80
+#ifdef STWIERDZONO_WINDOWS
+   #define KLAWISZ_ENTER 13
+   #define KLAWISZ_STRZALKI 224
+   #define KLAWISZ_STRZALKA_W_LEWO 75
+   #define KLAWISZ_STRZALKA_W_PRAWO 77
+   #define KLAWISZ_STRZALKA_W_GORE 72
+   #define KLAWISZ_STRZALKA_W_DOL 80
+#else
+   #define KLAWISZ_ENTER 10
+   #define KLAWISZ_STRZALKI 91
+   #define KLAWISZ_STRZALKA_W_LEWO 168 /* naprawde 68, ale litery tyle maja wiec przesunalem wszystkie strzalki o + 100 */
+   #define KLAWISZ_STRZALKA_W_PRAWO 167
+   #define KLAWISZ_STRZALKA_W_GORE 165
+   #define KLAWISZ_STRZALKA_W_DOL 166
+#endif
 /* CAPS i SHIFT nie wplywaja na strzalki, na SPACJE, na ENTER i na ESC*/
 #define KLAWISZ_w 119
 #define KLAWISZ_a 97
@@ -137,7 +147,6 @@ endif
 #define KLAWISZ_U 85
 #define KLAWISZ_O 79
 #define KLAWISZ_SPACJA 32
-#define KLAWISZ_ENTER 13
 #define KLAWISZ_ESC 27
 
 /*W przypadku kompilacji pod Unix problemem jest brak dostepu do polecen takich jak getch() czy kbhit().
@@ -595,12 +604,19 @@ int ile_populacja(char **T, int xT, int yT)
 
 unsigned char nacisniecie_przycisku()
 {
+	int pomoc=0;
 	unsigned char klawisz;
     fflush(stdin);
     klawisz=getch();
+    if (klawisz==KLAWISZ_ESC && kbhit()) klawisz=getch(); /* wykombinowalem polaczenie na oba systemy*/
+	
 	if (klawisz==KLAWISZ_STRZALKI)
     {
         klawisz=getch();
+	if (klawisz==(KLAWISZ_STRZALKA_W_GORE-100)) klawisz+=100; 
+	if (klawisz==(KLAWISZ_STRZALKA_W_LEWO-100)) klawisz+=100;
+	if (klawisz==(KLAWISZ_STRZALKA_W_PRAWO-100)) klawisz+=100; 
+	if (klawisz==(KLAWISZ_STRZALKA_W_DOL-100)) klawisz+=100;
         fflush(stdin);
 	}
 	return klawisz;
