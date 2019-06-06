@@ -105,7 +105,7 @@ endif
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
+/*NIEPOTRZEBNE (ZREZYGNOWA£EM Z TEJ MECHANIKI TEMPA): include <time.h>*/
 
 #define x_ekran 61
 #define y_ekran 61
@@ -210,7 +210,7 @@ int main(int agrc, char *argv[])
 				ykur=y0; /* muszê pamiêtaæ o sytuacji, gdy kursor wykracza poza tablicê - ma to byc dozwolone i obslugiwane - juz zrobilem */
 				do
 				{
-					wyswietl(T,xT,yT,x0,y0,xkur,ykur,tryb_tempa/*skala_tempa*/,dystans,czas);
+					wyswietl(T,xT,yT,x0,y0,xkur,ykur,tryb_tempa/*NIEPOTRZEBNE (ZREZYGNOWA£EM Z TEJ MECHANIKI TEMPA):skala_tempa*/,dystans,czas);
 					komunikacja=nacisniecie_przycisku();
 					if (czy_w_lewo(komunikacja))
 					{
@@ -255,7 +255,7 @@ int main(int agrc, char *argv[])
 						}
 						do
 						{
-							if (tryb_tempa) wyswietl(T,xT,yT,x0,y0,xkur,ykur,tryb_tempa,dystans,czas);
+							if (tryb_tempa) wyswietl(T,xT,yT,x0,y0,xkur,ykur,tryb_tempa/*NIEPOTRZEBNE (ZREZYGNOWA£EM Z TEJ MECHANIKI TEMPA):skala_tempa*/,dystans,czas);
 							/*NIEPOTRZEBNE (ZREZYGNOWA£EM Z TEJ MECHANIKI TEMPA):time(&t1);*/
 							wykonaj_krok_2(&T,&P,&xT,&yT,&x0,&y0,ZSD,&awaria,&czas);
 							/*NIEPOTRZEBNE (ZREZYGNOWA£EM Z TEJ MECHANIKI TEMPA):
