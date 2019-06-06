@@ -140,6 +140,59 @@ endif
 #define KLAWISZ_ENTER 13
 #define KLAWISZ_ESC 27
 
+/*W przypadku kompilacji pod Unix problemem jest brak dostepu do polecen takich jak getch() czy kbhit().
+Aby to rozwiazac wykorzystalem kody, ktorych nie rozumiem, z nastepujacych zrodel:
+https://stackoverflow.com/questions/7469139/what-is-the-equivalent-to-getch-getche-in-linux
+https://cboard.cprogramming.com/c-programming/63166-kbhit-linux.html
+*/
+#ifdef STWIERDZONO_UNIX
+#include <termios.h>
+#include <unistd.h>
+#include <fcntl.h>
+static struct termios stary, nowy;
+void initTermios(int echo) 
+{
+  tcgetattr(0, &stary); /* grab old terminal i/o settings */
+  nowy = stary; /* make new settings same as old settings */
+  nowy.c_lflag &= ~ICANON; /* disable buffered i/o */
+  if (echo) {
+      nowy.c_lflag |= ECHO; /* set echo mode */
+  } else {
+      nowy.c_lflag &= ~ECHO; /* set no echo mode */
+  }
+  tcsetattr(0, TCSANOW, &nowy); /* use these new terminal i/o settings now */
+}
+char getch(void) 
+{
+	char ch;
+	initTermios(0);
+	ch = getchar();
+	tcsetattr(0, TCSANOW, &stary);
+	return ch;
+}
+int kbhit(void)
+{
+  struct termios oldt, newt;
+  int ch;
+  int oldf;
+  tcgetattr(STDIN_FILENO, &oldt);
+  newt = oldt;
+  newt.c_lflag &= ~(ICANON | ECHO);
+  tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+  oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
+  fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
+  ch = getchar();
+  tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+  fcntl(STDIN_FILENO, F_SETFL, oldf);
+  if(ch != EOF)
+  {
+    ungetc(ch, stdin);
+    return 1;
+  }
+  return 0;
+}
+#endif
+
 void wczytaj_zasady(char ZSD[], char *awaria);
 char** wczytaj_uklad(int *xT, int *yT, char *awaria);
 void zapisz_uklad(char **T, int xT, int yT, char *awaria);
