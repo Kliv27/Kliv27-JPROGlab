@@ -4,13 +4,11 @@ Niewykonane:
 	
 	G³ównie zosta³o:
 	
-	Sprawdziæ, czy system("cls"); dzia³a pod Linuxem - poszukaæ odpowiedników.
-	Linux ma pewnie swoje w³asne system("cls") (jakieœ inne polecenie ma do tego) wiêc nie ma potrzeby, ¿ebym liczy³ ile znaków wypisa³em printfem i je kasowa³.
-	Linux - https://linux.die.net/man/3/sleep / Windows - sleep() z windows.h, ifdef itp.
+	kbhit mo¿e nie dzia³aæ pod systemem... zaproponowane system("clear") tez - sprawdzic, czy dziala, juz zaimplementowane
 	
 	Mo¿na znacznie lepiej skomentowaæ kod, ale nie trzeba.
 	Przyda siê usun¹æ niektóre komentarze z kodu na koniec.
-	Poprawiæ zwrot "raczej zadzia³a" w readme.txt - pod wzglêdem treœci.
+	Poprawiæ zwrot "raczej zadzia³a" w readme.txt - pod wzglêdem treœci. - wykonano
 	Napisaæ readme2.txt bez polskich znaków - dopiero, gdy pewne jest, ¿e readme.txt nie ulegnie zmianom.
 	Usun¹æ PLAN REALIZACJI PROJEKTU z kodu po jego ukoñczeniu.
 	
@@ -57,6 +55,9 @@ Wykonane:
 	U¿yj time_t do tego zeby kontrolowac ((dopelnienie roznicy t2-t1)+(t2-t1) = dlugosc_kroku) i sleep(dopelnienie roznicy) )
 	Decydujê siê zmieniæ mechanikê tempa na szybkie (nie wywoluje wyswietlen) i obserwowalne, a nie wartoœci i wywaliæ sleep'y i time_t
 	- zrobilem to, dziala, wystarczy zmienic w instrukcji opis do tego tempa inny
+	Sprawdziæ, czy system("cls"); dzia³a pod Linuxem - poszukaæ odpowiedników. Teraz powywolywac zamiast tej innej.
+	Linux ma pewnie swoje w³asne system("cls") (jakieœ inne polecenie ma do tego) wiêc nie ma potrzeby, ¿ebym liczy³ ile znaków wypisa³em printfem i je kasowa³.
+	pod nim chyba system("clear"); bez biblioteki bo to systemowe - najlepiej w funkcji z ifdefem
 
 Nigdy nie "commituj" pliku wykonywalnego ani pliku 000commit.txt zawieraj¹cego opis commita.
 
@@ -154,6 +155,7 @@ NIEPOTRZEBNE (ZREZYGNOWA£EM Z TEJ MECHANIKI TEMPA):
 float tempo(int skala_tempa);
 */
 void wyswietl(char **T,  int xT, int yT, int x0, int y0, int xkur, int ykur, int tryb_tempa, /*NIEPOTRZEBNE (ZREZYGNOWA£EM Z TEJ MECHANIKI TEMPA):int skala_tempa, */int dystans, int czas);
+void wyczysc();
 char** przydziel_pamiec_tablicy_pomocniczej(int xT, int yT, char *awaria);
 void zmien_tryb_tempa(int *wsk_tryb_tempa);
 /*NIEPOTRZEBNE (ZREZYGNOWA£EM Z TEJ MECHANIKI TEMPA):void zmien_skale_tempa(int *wsk_skala_tempa);*/
@@ -250,7 +252,7 @@ int main(int agrc, char *argv[])
 						komunikacja=KLAWISZ_T; /* ustawienie na dowolne inne makro */
 						if (!tryb_tempa)
 						{
-							system("cls");
+							wyczysc();
 							printf("Szybkie obliczenia w tle... Nacisnij ENTER aby zatrzymac.");
 						}
 						do
@@ -467,7 +469,7 @@ void zwolnij_pamiec(char **T, int yT)
 
 void wypisz_komunikat_o_awarii(char awaria)
 {
-	system("cls");
+	wyczysc();
 	switch (awaria)
 	{
 		case 31:
@@ -502,7 +504,7 @@ void wypisz_komunikat_o_awarii(char awaria)
 
 void wypisz_komunikat_zakonczenia()
 {
-	system("cls");
+	wyczysc();
 	printf("Praca programu zostala zakonczona. Program zostanie zamkniety. Nacisnij dowolny przycisk, aby kontynuowac.");
 	fflush(stdin);
 	getch();
@@ -587,7 +589,7 @@ void wyswietl(char **T, int xT, int yT, int x0, int y0, int xkur, int ykur, int 
 	imax=xkur+pomx;
 	jmin=ykur-pomy;
 	jmax=ykur+pomy;
-	system("cls");
+	wyczysc();
 	for (j=jmax;j>=jmin;j--)
 	{
 		for (i=imin;i<=imax;i++)
@@ -626,6 +628,15 @@ void wyswietl(char **T, int xT, int yT, int x0, int y0, int xkur, int ykur, int 
 	{
 		putchar('#');
 	}
+}
+
+void wyczysc()
+{
+	#ifdef STWIERDZONO_WINDOWS
+		system("cls");
+	#else
+		system("clear");
+	#endif
 }
 
 char** przydziel_pamiec_tablicy_pomocniczej(int xT, int yT, char *awaria)
