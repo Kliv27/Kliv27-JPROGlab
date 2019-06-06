@@ -3,14 +3,10 @@ PLAN REALIZACJI PROJEKTU
 Niewykonane:
 	
 	G³ównie zosta³o:
-	- kroki automatyczne (ENTER) - dopracowanie:
-	U¿yj time_t do tego zeby kontrolowac ((dopelnienie roznicy t2-t1)+(t2-t1) = dlugosc_kroku) i sleep(dopelnienie roznicy) )
 	
 	Sprawdziæ, czy system("cls"); dzia³a pod Linuxem - poszukaæ odpowiedników.
 	Linux ma pewnie swoje w³asne system("cls") (jakieœ inne polecenie ma do tego) wiêc nie ma potrzeby, ¿ebym liczy³ ile znaków wypisa³em printfem i je kasowa³.
 	Linux - https://linux.die.net/man/3/sleep / Windows - sleep() z windows.h, ifdef itp.
-	mogê przenieœæ czêœæ kodu (pojedyncze wywo³ania funkcji np. sleep) do plików .c i includowaæ je warunkowo wewn¹trz kodu
-	Warunkowo zdefiniuj dzielnik, jeœli funkcje sleep() wymagaj¹ innych jednostek. Mo¿esz u¿ywaæ ró¿nic czasu z <time.h>
 	
 	Mo¿na znacznie lepiej skomentowaæ kod, ale nie trzeba.
 	Przyda siê usun¹æ niektóre komentarze z kodu na koniec.
@@ -57,6 +53,10 @@ Wykonane:
 	Od teraz samo wyjœcie poza tablicê nie wywala programu - przydzia³ dynamiczny œwietnie dzia³a, zapisywanie wyniku te¿ - przetestowane.
 	- sprawiæ, aby funkcja wykonania kroku nie wywala³a programu - trzeba do tego przejrzec dokladnie wiele funkcji
 	Czy aby na pewno obydwie tablice g³ówne s¹ traktowane symetrycznie co do zmian ich rozmiaru? Teraz ju¿ wygl¹da na to, ¿e tak, bo program dzia³a prawid³owo.
+	- kroki automatyczne (ENTER) - dopracowanie:
+	U¿yj time_t do tego zeby kontrolowac ((dopelnienie roznicy t2-t1)+(t2-t1) = dlugosc_kroku) i sleep(dopelnienie roznicy) )
+	Decydujê siê zmieniæ mechanikê tempa na szybkie (nie wywoluje wyswietlen) i obserwowalne, a nie wartoœci i wywaliæ sleep'y i time_t
+	- zrobilem to, dziala, wystarczy zmienic w instrukcji opis do tego tempa inny
 
 Nigdy nie "commituj" pliku wykonywalnego ani pliku 000commit.txt zawieraj¹cego opis commita.
 
@@ -70,8 +70,42 @@ Nigdy nie "commituj" pliku wykonywalnego ani pliku 000commit.txt zawieraj¹cego o
 
 */
 
+
+#ifdef _WIN64
+	#define STWIERDZONO_WINDOWS 4
+#else
+	#ifdef _WIN32
+		#define STWIERDZONO_WINDOWS 3
+	#endif
+#endif
+
+#ifdef __linux__
+	#define STWIERDZONO_UNIX 2
+#else
+	#ifdef __unix__
+		#define STWIERDZONO_UNIX 1
+	#endif
+#endif
+
+#ifndef STWIERDZONO_WINDOWS
+	#ifndef STWIERDZONO_UNIX
+		#error Kompilacja pod blednym systemem!
+	#endif
+#endif
+/*
+NIEPOTRZEBNE (ZREZYGNOWA£EM Z TEJ MECHANIKI TEMPA):
+ifdef STWIERDZONO_WINDOWS
+	include <Windows.h>
+endif
+
+ifdef STWIERDZONO_UNIX
+	include <unistd.h> 
+endif
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #define x_ekran 61
 #define y_ekran 61
@@ -115,10 +149,14 @@ int jest4849(char znak);
 char TT(int Xc, int Yc, char **T, int xT, int yT, int x0, int y0); /* odczytuje element tablicy lub pustkê poza ni¹ */
 int ile_populacja(char **T, int xT, int yT);
 unsigned char nacisniecie_przycisku();
+/*
+NIEPOTRZEBNE (ZREZYGNOWA£EM Z TEJ MECHANIKI TEMPA):
 float tempo(int skala_tempa);
-void wyswietl(char **T,  int xT, int yT, int x0, int y0, int xkur, int ykur, int skala_tempa, int dystans, int czas);
+*/
+void wyswietl(char **T,  int xT, int yT, int x0, int y0, int xkur, int ykur, int tryb_tempa, /*NIEPOTRZEBNE (ZREZYGNOWA£EM Z TEJ MECHANIKI TEMPA):int skala_tempa, */int dystans, int czas);
 char** przydziel_pamiec_tablicy_pomocniczej(int xT, int yT, char *awaria);
-void zmien_skale_tempa(int *wsk_skala_tempa);
+void zmien_tryb_tempa(int *wsk_tryb_tempa);
+/*NIEPOTRZEBNE (ZREZYGNOWA£EM Z TEJ MECHANIKI TEMPA):void zmien_skale_tempa(int *wsk_skala_tempa);*/
 void zmien_dystans(int *wsk_dystans);
 char** zmniejsz_rozmiar_planszy_maksymalnie(char **D, int *xT, int *yT, int *x0, int *y0, char *awaria);
 /* wywo³anie: T=zmniejsz_rozmiar_planszy_maksymalnie(T,&xT,&yT,&x0,&y0,&awaria)*/
@@ -144,10 +182,19 @@ int main(int agrc, char *argv[])
 	unsigned char komunikacja;
 	int xT=0, yT=0, x0=0, y0=0, xkur=0, ykur=0; /* wymiary tablicy, po³o¿enie punktu (0,0) wzglêdem tablicy, po³o¿enie kursora */
 	/* po³o¿enie kursora jest wzgledem kartezjanskich wspolrzednych, x0 i y0 wzgledem tablicy */
-	int skala_tempa=0, dystans=1, czas=0;
+	int tryb_tempa=1, dystans=1, czas=0;
+	/* tryb 0 - szybki, 1 - wolny */
+	/* NIEPOTRZEBNE (ZREZYGNOWA£EM Z TEJ MECHANIKI TEMPA):int skala_tempa=0;*/
 	/* skala_tempa od -1 (0.5x) do 4 (16x)  */
 	/* dystans 1 3 5 10 20 40 */
 	char ZSD[18]; /* zasady od a0 do d8 */
+	/*
+	NIEPOTRZEBNE (ZREZYGNOWA£EM Z TEJ MECHANIKI TEMPA):
+	time_t t1, t2;
+	double deltate, opoznienie;
+	int ile_mikrosekund;
+	*/
+	
 	wczytaj_zasady(ZSD,&awaria);
 	if (awaria==0)
 	{
@@ -160,10 +207,10 @@ int main(int agrc, char *argv[])
 				x0=xT/2; /* x0 jest zawsze >=0 (ale tylko na poczatku), bo jest wzgledem tablicy */
 				y0=yT/2; /* y0 jest zawsze >=0 (ale tylko na poczatku), bo jest wzgledem tablicy */
 				xkur=x0; /* ustawienie kursora na srodek */
-				ykur=y0; /* muszê pamiêtaæ o sytuacji, gdy kursor wykracza poza tablicê - ma to byc dozwolone i obslugiwane */
+				ykur=y0; /* muszê pamiêtaæ o sytuacji, gdy kursor wykracza poza tablicê - ma to byc dozwolone i obslugiwane - juz zrobilem */
 				do
 				{
-					wyswietl(T,xT,yT,x0,y0,xkur,ykur,skala_tempa,dystans,czas);
+					wyswietl(T,xT,yT,x0,y0,xkur,ykur,tryb_tempa/*skala_tempa*/,dystans,czas);
 					komunikacja=nacisniecie_przycisku();
 					if (czy_w_lewo(komunikacja))
 					{
@@ -183,7 +230,8 @@ int main(int agrc, char *argv[])
 					}
 					else if ((komunikacja==KLAWISZ_T) || (komunikacja==KLAWISZ_t))
 					{
-						zmien_skale_tempa(&skala_tempa);
+						zmien_tryb_tempa(&tryb_tempa);
+						/*NIEPOTRZEBNE (ZREZYGNOWA£EM Z TEJ MECHANIKI TEMPA):zmien_skale_tempa(&skala_tempa);*/
 					}
 					else if (czy_klawisz_U(komunikacja))
 					{
@@ -200,12 +248,29 @@ int main(int agrc, char *argv[])
 					else if (komunikacja==KLAWISZ_ENTER)
 					{
 						komunikacja=KLAWISZ_T; /* ustawienie na dowolne inne makro */
+						if (!tryb_tempa)
+						{
+							system("cls");
+							printf("Szybkie obliczenia w tle... Nacisnij ENTER aby zatrzymac.");
+						}
 						do
 						{
-							/* t1= */
+							if (tryb_tempa) wyswietl(T,xT,yT,x0,y0,xkur,ykur,tryb_tempa,dystans,czas);
+							/*NIEPOTRZEBNE (ZREZYGNOWA£EM Z TEJ MECHANIKI TEMPA):time(&t1);*/
 							wykonaj_krok_2(&T,&P,&xT,&yT,&x0,&y0,ZSD,&awaria,&czas);
-							/* t2= */
-							/* sleep */
+							/*NIEPOTRZEBNE (ZREZYGNOWA£EM Z TEJ MECHANIKI TEMPA):
+							time(&t2);
+							deltate=difftime(t2,t1);
+							opoznienie=(double)tempo(skala_tempa);
+							ile_mikrosekund=(int)(1000000.0*((opoznienie-deltate)>0.0)?(opoznienie-deltate):(0.0));
+							ifdef STWIERDZONO_WINDOWS
+								include "kod_dodatkowy2.c"
+							endif
+	
+							ifdef STWIERDZONO_UNIX
+								include "kod_dodatkowy1.c"
+							endif
+							*/
 							if (kbhit())
 							{
 								komunikacja=nacisniecie_przycisku();
@@ -486,6 +551,8 @@ unsigned char nacisniecie_przycisku()
 	return klawisz;
 }
 
+/*
+NIEPOTRZEBNE (ZREZYGNOWA£EM Z TEJ MECHANIKI TEMPA):
 float tempo(int skala_tempa)
 {
 	float wynik=1.0;
@@ -507,8 +574,9 @@ float tempo(int skala_tempa)
 	}
 	return wynik;
 }
+*/
 
-void wyswietl(char **T, int xT, int yT, int x0, int y0, int xkur, int ykur, int skala_tempa, int dystans, int czas)
+void wyswietl(char **T, int xT, int yT, int x0, int y0, int xkur, int ykur, int tryb_tempa, int dystans, int czas)
 {
 	/* chyba dzia³a œwetnie */
 	int i, j, imin, imax, jmin, jmax, pomx, pomy;
@@ -546,7 +614,8 @@ void wyswietl(char **T, int xT, int yT, int x0, int y0, int xkur, int ykur, int 
 		{
 			case 0: printf(" Populacja: %d",ile_populacja(T,xT,yT)%1000000); break;
 			case 1: printf(" Czas: %d",czas%1000000); break;
-			case 2: printf(" Tempo: %.1fx",tempo(skala_tempa)); break;
+			case 2: {printf(" Tempo: "); if (tryb_tempa) printf("widok"); else printf("w tle");} break;
+			/*NIEPOTRZEBNE (ZREZYGNOWA£EM Z TEJ MECHANIKI TEMPA):case 2: printf(" Tempo: %.1fx",tempo(skala_tempa)); break;*/
 			case 3: printf(" Dystans: %d",dystans%1000000); break;
 			case 4: printf(" x: %d",xkur%1000000); break;
 			case 5: printf(" y: %d",ykur%1000000);
@@ -597,11 +666,18 @@ char** przydziel_pamiec_tablicy_pomocniczej(int xT, int yT, char *awaria)
 	return P;
 }
 
+void zmien_tryb_tempa(int *wsk_tryb_tempa)
+{
+	if (*wsk_tryb_tempa) *wsk_tryb_tempa=0;
+	else *wsk_tryb_tempa=1;
+}
+/*NIEPOTRZEBNE (ZREZYGNOWA£EM Z TEJ MECHANIKI TEMPA):
 void zmien_skale_tempa(int *wsk_skala_tempa)
 {
 	(*wsk_skala_tempa)++;
 	if ((*wsk_skala_tempa)>4) *wsk_skala_tempa=-1;
 }
+*/
 
 void zmien_dystans(int *wsk_dystans)
 {

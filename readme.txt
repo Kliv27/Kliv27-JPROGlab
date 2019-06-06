@@ -1,4 +1,4 @@
-Program umo¿liwia symulowanie w konsoli (na systemach z rodziny Windows i Linux - nie jest przeznaczony na inne, ale raczej zadzia³a) wszystkich automatów komórkowych spe³niaj¹cych nastepuj¹ce warunki:
+Program umo¿liwia symulowanie w konsoli (na systemach z rodziny Windows i Unix - nie jest przeznaczony na inne) wszystkich automatów komórkowych spe³niaj¹cych nastêpuj¹ce warunki:
 - s¹ dwuwymiarowe (dwa wymiary przestrzenne i czas);
 - komórki s¹ u³o¿one w s¹siedztwie Moore'a (ka¿da ma 8 s¹siadów);
 - komórki mog¹ znajdowaæ siê w dwóch stanach (martwym - 0, ¿ywym - 1);
@@ -79,7 +79,7 @@ Oznaczenia wystêpuj¹ce na planszy:
 Na marginesie poza plansz¹ w prawym górnym rogu widoczne s¹ wartoœci opisuj¹ce bie¿¹c¹ sytuacjê. Podaj¹ one maksymalnie 6 cyfr. Oto, co oznaczaj¹:
   Populacja - podaje ³¹czn¹ liczbê ¿ywych komórek w chwili obecnej;
   Czas - podaje numer iteracji (kroku czasowego) przyjmuj¹c, ¿e stan pocz¹tkowy to chwila oznaczana jako 0;
-  Tempo - podaje czêstotliwoœæ (1x oznacza 1 Hz) zwi¹zan¹ z liczb¹ wykonywanych kroków iteracyjnych w jednostce czasu, gdy uruchomiony jest tryb automatyczny;
+  Tempo - podaje chwilowo wybrany (jeden z dwóch) sposobów dzia³ania trybu automatycznego. Symulacja "w tle" jest szybsza, ale jej kroki nie s¹ widoczne.
   Dystans - podaje, na jak¹ odleg³oœæ przesunie siê perspektywa w edytorze;
   x, y - podaj¹ po³o¿enie (w dyskretnym kartezjañskim uk³adzie wspó³rzêdnych) komórki znajduj¹cej siê pod kursorem (na œrodku planszy);
 Wspó³rzêdne kartezjañskie jednoznacznie identyfikuj¹ komórkê w przestrzeni - jest ona powi¹zana ze swoimi przesz³ymi i przysz³ymi stanami. Dziêki nim mo¿na okreœliæ to, jak uk³ad komórek (np. statek) siê przemieœci³.
@@ -89,6 +89,6 @@ przyciski WASD lub strza³ki - do przemieszczania widoku (i kursora) po wirtualny
 przycisk ESC - do zakoñczenia pracy programu (stan koñcowy zostanie zapisany automatycznie) - wymaga zatrzymania symulacji (wy³¹czenia trybu automatycznego);
 przycisk SPACJA - wykonanie jednego kroku czasowego;
 przycisk ENTER - przejœcie miêdzy stanem EDYCJI (pauzy) a stanem ci¹g³ego automatycznego wykonywania kroków przez program;
-przycisk T - zmiana tempa (d³ugoœci czasu rzeczywistego przeznaczonego na jeden krok czasowy automatu) - przycisk nie jest mo¿liwy do u¿ycia w trakcie dzia³ania trybu automatycznego - naciœniêcie go niczego nie spowoduje;
+przycisk T - zmiana sposobu dzia³ania trybu automatycznego (widocznego jako Tempo) - przycisk nie jest mo¿liwy do u¿ycia w trakcie dzia³ania trybu automatycznego - naciœniêcie go niczego nie spowoduje;
 przycisk U - zmiana dystansu, na jaki przemieszcza siê perspektywa/kursor - mo¿na u¿ywaæ w trybie automatycznym;
 przycisk O - zmiana stanu komórki pod kursorem w trybie edycji - nie mo¿liwe do u¿ycia w trybie automatycznym;
