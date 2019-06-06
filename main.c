@@ -3,9 +3,9 @@ PLAN REALIZACJI PROJEKTU
 Niewykonane:
 	
 	G³ównie zosta³o:
-	
-	kbhit mo¿e nie dzia³aæ pod systemem... zaproponowane system("clear") tez - sprawdzic, czy dziala, juz zaimplementowane
-	
+	Masz czas do srody do rana - sprawdzanie nastapi!
+	Dodac \n na koncu komonikatow koncowych i na koncu pliku zapisywanego out.txt, bo znak zachety wyswietla sie in-line
+	Dodac do readme opis instalacji do zrozumienia przez kogos, kto zna tylko podstawy tego wszystkiego.
 	Mo¿na znacznie lepiej skomentowaæ kod, ale nie trzeba.
 	Przyda siê usun¹æ niektóre komentarze z kodu na koniec.
 	Poprawiæ zwrot "raczej zadzia³a" w readme.txt - pod wzglêdem treœci. - wykonano
@@ -58,6 +58,8 @@ Wykonane:
 	Sprawdziæ, czy system("cls"); dzia³a pod Linuxem - poszukaæ odpowiedników. Teraz powywolywac zamiast tej innej.
 	Linux ma pewnie swoje w³asne system("cls") (jakieœ inne polecenie ma do tego) wiêc nie ma potrzeby, ¿ebym liczy³ ile znaków wypisa³em printfem i je kasowa³.
 	pod nim chyba system("clear"); bez biblioteki bo to systemowe - najlepiej w funkcji z ifdefem
+	kbhit mo¿e nie dzia³aæ pod systemem... zaproponowane system("clear") tez - sprawdzic, czy dziala, juz zaimplementowane
+	Program wydaje sie dzialac juz prawodlowo pod obydwoma systemami.
 
 Nigdy nie "commituj" pliku wykonywalnego ani pliku 000commit.txt zawieraj¹cego opis commita.
 
