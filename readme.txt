@@ -12,6 +12,39 @@ Specyfikacja zadania programu:
 	- stan koñcowy uk³adu komórek
 W trakcie dzia³ania programu mo¿liwe jest modyfikowanie stanu aktualnego przy pomocy edytora wewn¹trz programu. Umo¿liwia on równie¿ wyœwietlanie chwilowego stanu uk³adu. Nie jest jednak mo¿liwe zmienianie zasad w trakcie pracy programu. Mo¿na to osi¹gn¹æ jedynie zamykaj¹c program (jego stan siê zapisze) i uruchamiaj¹c go ponownie dopiero po podmianie zawartoœci pliku a.txt na t¹ z out.txt i modyfikacji pliku zasady.txt. 
 
+INSTALACJA:
+	Pod systemem Windows:
+1. Dokonaj kompilacji kodu Ÿród³owego zawartego w pliku main.c za pomoc¹ kompilatora jêzyka C. Mo¿e to byæ np. kompilator wewn¹trz œrodowiska programistycznego. Je¿eli je¿eli nie masz takiego oprogramowania, to je pobierz (istniej¹ darmowe programy).
+2. Powstanie plik .exe, który zasadniczo powinien byæ uruchamiany tylko na sprzêcie, na którym nast¹pi³a kompilacja. Umieœæ ten plik w jednym folderze wraz z plikami a.txt, zasady.txt i out.txt.
+3. Je¿eli nie posiadasz tych plików, stwórz je wed³ug wzorów ich zawartoœci, które mo¿esz znaleŸæ w dalszej czêœci tego pliku informacyjnego.
+4. Plik wykonywalny (.exe) jest gotowy do uruchomienia.
+	Pod systemem Linux:
+1. Dokonaj kompilacji kodu Ÿród³owego zawartego w pliku main.c za pomoc¹ kompilatora jêzyka C.
+$ mkdir Automat
+$ cd ./Automat
+$ cp [sciezka]/main.c ./automat.c
+Je¿eli dysponujesz odpowiednim kompilatorem, to prawdopodobnie (zak³adaj¹c miêdzy innymi, ¿e twoj¹ pow³ok¹ jest bash) mo¿esz tego dokonaæ jednym z poni¿szych poleceñ:
+$ cc automat.c -o automat
+$ gcc automat.c -o automat
+2. Powstanie plik wykonywalny o nazwie "automat", który zasadniczo powinien byæ uruchamiany tylko na sprzêcie, na którym nast¹pi³a kompilacja. Umieœæ ten plik w jednym folderze wraz z plikami a.txt, zasady.txt i out.txt.
+3. Je¿eli nie posiadasz tych plików, stwórz je wed³ug wzorów, które mo¿esz znaleŸæ w dalszej czêœci tego pliku informacyjnego.
+$ touch a.txt
+$ touch out.txt
+$ touch zasady.txt
+$ echo “010” >> a.txt
+$ echo “011” >> a.txt
+$ echo "a0: 0" >> zasady.txt
+$ echo "a1: 0" >> zasady.txt
+$ echo "a2: 1" >> zasady.txt
+$ echo "a3: 1" >> zasady.txt
+...
+$ echo "d7: 0" >> zasady.txt
+$ echo "d8: 0" >> zasady.txt
+4. Plik wykonywalny "automat" jest gotowy do uruchomienia.
+$ ./automat
+
+Oczywiœcie instalacji dokonuje siê tylko raz. Za ka¿dym kolejnym razem wystarczy przejœæ od razu do punktu 4.
+
 Ile ³¹cznie jest takich automatów komórkowych? Mo¿na to ³atwo policzyæ:
 Dana komórka mo¿e siê znajdowaæ w dwóch stanach - dwie mo¿liwoœci.
 Spoœród 8 jej s¹siadów najmniejsza mo¿liwa liczba ¿ywych komórek to 0 a najwiêksza to 8 - razem 9 mo¿liwoœci.

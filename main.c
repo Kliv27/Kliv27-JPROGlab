@@ -4,10 +4,9 @@ Niewykonane:
 	Masz czas do srody do rana - sprawdzanie nastapi!
 	
 	G³ównie zosta³o:
-	Dodac do readme opis instalacji do zrozumienia przez kogos, kto zna tylko podstawy tego wszystkiego.
 	Mo¿na znacznie lepiej skomentowaæ kod, ale nie trzeba.
 	Przyda siê usun¹æ niektóre komentarze z kodu na koniec.
-	Poprawiæ zwrot "raczej zadzia³a" w readme.txt - pod wzglêdem treœci. - wykonano
+	Przetestowac program na obydwu systemach wg wzoru z instrukcji.
 	Napisaæ readme2.txt bez polskich znaków - dopiero, gdy pewne jest, ¿e readme.txt nie ulegnie zmianom.
 	Usun¹æ PLAN REALIZACJI PROJEKTU z kodu po jego ukoñczeniu.
 	
@@ -60,6 +59,8 @@ Wykonane:
 	kbhit mo¿e nie dzia³aæ pod systemem... zaproponowane system("clear") tez - sprawdzic, czy dziala, juz zaimplementowane
 	Program wydaje sie dzialac juz prawodlowo pod obydwoma systemami.
 	Dodac \n na koncu komunikatow koncowych i na koncu pliku zapisywanego out.txt, bo znak zachety wyswietla sie in-line
+	Dodac do readme opis instalacji do zrozumienia przez kogos, kto zna tylko podstawy tego wszystkiego.
+	Poprawiæ zwrot "raczej zadzia³a" w readme.txt - pod wzglêdem treœci. - wykonano
 
 Nigdy nie "commituj" pliku wykonywalnego ani pliku 000commit.txt zawieraj¹cego opis commita.
 
