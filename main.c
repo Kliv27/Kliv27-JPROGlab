@@ -1,10 +1,9 @@
 /*
 PLAN REALIZACJI PROJEKTU
 Niewykonane:
+	Masz czas do srody do rana - sprawdzanie nastapi!
 	
 	G³ównie zosta³o:
-	Masz czas do srody do rana - sprawdzanie nastapi!
-	Dodac \n na koncu komonikatow koncowych i na koncu pliku zapisywanego out.txt, bo znak zachety wyswietla sie in-line
 	Dodac do readme opis instalacji do zrozumienia przez kogos, kto zna tylko podstawy tego wszystkiego.
 	Mo¿na znacznie lepiej skomentowaæ kod, ale nie trzeba.
 	Przyda siê usun¹æ niektóre komentarze z kodu na koniec.
@@ -60,6 +59,7 @@ Wykonane:
 	pod nim chyba system("clear"); bez biblioteki bo to systemowe - najlepiej w funkcji z ifdefem
 	kbhit mo¿e nie dzia³aæ pod systemem... zaproponowane system("clear") tez - sprawdzic, czy dziala, juz zaimplementowane
 	Program wydaje sie dzialac juz prawodlowo pod obydwoma systemami.
+	Dodac \n na koncu komunikatow koncowych i na koncu pliku zapisywanego out.txt, bo znak zachety wyswietla sie in-line
 
 Nigdy nie "commituj" pliku wykonywalnego ani pliku 000commit.txt zawieraj¹cego opis commita.
 
@@ -508,7 +508,7 @@ void zapisz_uklad(char **T, int xT, int yT, char *awaria)
 			{
 				fputc(48+(*(*(T+y)+x)),plik_wyjsciowy);
 			}
-			if (y!=0) fputc('\n',plik_wyjsciowy); /* na wiki pisza, ze \n samo sie zmieni na \r\n pod Windows, Linux - \n dziala najzwyczajniej */
+			fputc('\n',plik_wyjsciowy); /* na wiki pisza, ze \n samo sie zmieni na \r\n pod Windows, Linux - \n dziala najzwyczajniej */
 		}
 	}
 	else
@@ -569,9 +569,10 @@ void wypisz_komunikat_o_awarii(char awaria)
 void wypisz_komunikat_zakonczenia()
 {
 	wyczysc();
-	printf("Praca programu zostala zakonczona. Program zostanie zamkniety. Nacisnij dowolny przycisk, aby kontynuowac.");
+	printf("Praca programu zostala zakonczona. Program zostanie zamkniety. Nacisnij dowolny przycisk, aby kontynuowac.\n");
 	fflush(stdin);
 	getch();
+	wyczysc();
 }
 
 int jest4849(char znak)
