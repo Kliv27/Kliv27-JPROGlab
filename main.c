@@ -1,69 +1,7 @@
 /*
-PLAN REALIZACJI PROJEKTU
-Niewykonane:
-	Masz czas do srody do rana - sprawdzanie nastapi!
+	AUTOMATY KOMÓRKOWE w jêzyku C
+	Koncepcja:
 	
-	G³ównie zosta³o:
-	Mo¿na znacznie lepiej skomentowaæ kod, ale nie trzeba.
-	Przyda siê usun¹æ niektóre komentarze z kodu na koniec.
-	Przetestowac program na obydwu systemach wg wzoru z instrukcji.
-	Napisaæ readme2.txt bez polskich znaków - dopiero, gdy pewne jest, ¿e readme.txt nie ulegnie zmianom.
-	Usun¹æ PLAN REALIZACJI PROJEKTU z kodu po jego ukoñczeniu.
-	
-Wykonane:
-	Rezygnujê z wieloœci kolorów.
-	SprawdŸ czy polskie znaki dzia³aj¹ pod innym systemem operacyjnym. Wyniki eksperymentu:
-		na Windowsie wszystkie dzia³aja
-		w paiza.io nie dzia³a
-		na Linuxie - napisany program testowy z polskimi znakami wykaza³, ¿e znaki z mojego programu tworzone t¹ metod¹ nie zadzia³aj¹ na Linuxie -
-	Wobec tego rezygnujê z polskich znaków w programie.
-	Sprawdzono wymiary (w liczbie znaków) dostêpne w konsoli do wyœwietlania pracy programu.
-	Wyniki: Programy konsolowe w Windows: maksymalna szerokoœæ 80, wysokoœæ jest wiêksza. Parametry te s¹ niezale¿ne od systemu, natomiast zale¿¹ od wyœwietlanej konsoli. Mog¹ zatem byæ wiêksze.
-	Opisz program ogólnie w pliku readme.txt. Okreœl specyfikacjê zadania i dane wejœciowe.
-	Dodaj nazwy plików wynikowych i plików danych wejœciowych do readme.txt i opisz standard ich zawartoœci.
-	Do pliku readme.txt dodaj wyjaœnienia planowanych oznaczeñ komórek w programie:
-	' ' - 
-	'O' - 
-	'^' - 
-	'X' - 
-	Dodaj instrukcjê u¿ycia programu - nie wewn¹trz jego samego.
-	WASD / strza³ki - zmiana perspektywy, np. o 20 pól, przycisk zmiany wielkoœci kroku przesuwania - 1, 10, 20 .. 60 z wyœwietleniem aktualnej wartoœci na marginesie
-	U¿ytkownik mo¿e zmieniaæ minimaln¹ d³ugoœæ kroku czasowego wy³¹cznie wtedy, gdy tryb automatyczny jest wy³¹czony.
-	Dodaj (do instrukcji) przycisk zmiany d³ugoœci jednego kroku z wyœwietlaniem na marginesie. Mo¿na te¿ wyœwietlaæ liczebnoœæ populacji, po³o¿enie kursora itp.
-	W przyk³adach poka¿ zasady gry w ¿ycie Conway'a oraz Gosper Glider Gun. Niech bêd¹ równie¿ pocz¹tkowymi zawartoœciami plików wejœciowych.
-	pamiêtaj: d0 musi zasze wynosiæ 0, aby pusta przestrzeñ nie ulega³a samowype³nieniu.
-	- Sprawdziæ wszystko to, co mam do tej pory (przejrzeæ kod).
-	- dodanie wyswietlania (funkcja)
-	Do przyjmowania poleceñ od u¿ytkownika w trakcie dzia³ania programu wszêdzie u¿ywaj getch() z conio.h
-	Œwiat tych automatów komórkowych ma byæ nieskoñczony. Decydujê siê ostatecznie nie dodawaæ opcji symulacji na torusie.
-	- dodanie tablicy pomocniczej, jej przydzial pamieci, obsluga jej bledow
-	- dodanie prostych reakcji na przyciski (na lokalnych zmiennych funkcji main) - za pomoca pojedynczych instrukcji
-	- dodanie zlozonych reakcji (dzialanie zasad automatu zmiana tempa z 1x na 4x czyli 4Hz itp., zmiana dystansu)
-	- napisanie funkcji wykonuj¹cych alokacjê/dealokacjê pamiêci
-	- sprobuj alokowac pamiec (przy wczytywaniu danych) za pomoca innej funkcji (wywolaj inna)
-	- dodanie reakcji na przycisk O (zmiana stanu komórki w edytorze)
-	- napisanie funkcji wykonujacej krok - musi przekazywaæ wskaŸnik na wskaŸnik przez wskaŸnik (char ***T_adres)
-		Porada: krok iteracyjny automatu jednak powinien byc wykonywany w osobnej funkcji, ale bez alokowania pamieci co chwila
-		stworz tablice w funkcji glownej i ona zawiera nowy stan i zamien wskazniki
-	- wywolanie funkcji dealokujacej nadmiar pamieci np. co 100 kroków
-	Od teraz samo wyjœcie poza tablicê nie wywala programu - przydzia³ dynamiczny œwietnie dzia³a, zapisywanie wyniku te¿ - przetestowane.
-	- sprawiæ, aby funkcja wykonania kroku nie wywala³a programu - trzeba do tego przejrzec dokladnie wiele funkcji
-	Czy aby na pewno obydwie tablice g³ówne s¹ traktowane symetrycznie co do zmian ich rozmiaru? Teraz ju¿ wygl¹da na to, ¿e tak, bo program dzia³a prawid³owo.
-	- kroki automatyczne (ENTER) - dopracowanie:
-	U¿yj time_t do tego zeby kontrolowac ((dopelnienie roznicy t2-t1)+(t2-t1) = dlugosc_kroku) i sleep(dopelnienie roznicy) )
-	Decydujê siê zmieniæ mechanikê tempa na szybkie (nie wywoluje wyswietlen) i obserwowalne, a nie wartoœci i wywaliæ sleep'y i time_t
-	- zrobilem to, dziala, wystarczy zmienic w instrukcji opis do tego tempa inny
-	Sprawdziæ, czy system("cls"); dzia³a pod Linuxem - poszukaæ odpowiedników. Teraz powywolywac zamiast tej innej.
-	Linux ma pewnie swoje w³asne system("cls") (jakieœ inne polecenie ma do tego) wiêc nie ma potrzeby, ¿ebym liczy³ ile znaków wypisa³em printfem i je kasowa³.
-	pod nim chyba system("clear"); bez biblioteki bo to systemowe - najlepiej w funkcji z ifdefem
-	kbhit mo¿e nie dzia³aæ pod systemem... zaproponowane system("clear") tez - sprawdzic, czy dziala, juz zaimplementowane
-	Program wydaje sie dzialac juz prawodlowo pod obydwoma systemami.
-	Dodac \n na koncu komunikatow koncowych i na koncu pliku zapisywanego out.txt, bo znak zachety wyswietla sie in-line
-	Dodac do readme opis instalacji do zrozumienia przez kogos, kto zna tylko podstawy tego wszystkiego.
-	Poprawiæ zwrot "raczej zadzia³a" w readme.txt - pod wzglêdem treœci. - wykonano
-
-Nigdy nie "commituj" pliku wykonywalnego ani pliku 000commit.txt zawieraj¹cego opis commita.
-
 	*(T+2) --> *(*(T+2)+0) ; *(*(T+2)+1) ; *(*(T+2)+2)
 	*(T+1) --> *(*(T+1)+0) ; *(*(T+1)+1) ; *(*(T+1)+2)
 	*(T+0) --> *(*(T+0)+0) ; *(*(T+0)+1) ; *(*(T+0)+2)
@@ -96,20 +34,15 @@ Nigdy nie "commituj" pliku wykonywalnego ani pliku 000commit.txt zawieraj¹cego o
 		#error Kompilacja pod blednym systemem!
 	#endif
 #endif
-/*
-NIEPOTRZEBNE (ZREZYGNOWA£EM Z TEJ MECHANIKI TEMPA):
+/*NIEPOTRZEBNE (ZREZYGNOWA£EM Z TEJ MECHANIKI TEMPA):
 ifdef STWIERDZONO_WINDOWS
 	include <Windows.h>
-endif
-
-ifdef STWIERDZONO_UNIX
-	include <unistd.h> 
-endif
-*/
+endif*/
 
 #include <stdio.h>
 #include <stdlib.h>
-/*NIEPOTRZEBNE (ZREZYGNOWA£EM Z TEJ MECHANIKI TEMPA): include <time.h>*/
+/*NIEPOTRZEBNE (ZREZYGNOWA£EM Z TEJ MECHANIKI TEMPA):
+include <time.h>*/
 
 #define x_ekran 61
 #define y_ekran 61
@@ -129,12 +62,11 @@ endif
 #else
    #define KLAWISZ_ENTER 10
    #define KLAWISZ_STRZALKI 91
-   #define KLAWISZ_STRZALKA_W_LEWO 168 /* naprawde 68, ale litery tyle maja wiec przesunalem wszystkie strzalki o + 100 */
+   #define KLAWISZ_STRZALKA_W_LEWO 168 /* naprawde 68, ale maja tyle niektore litery wasd. rozwiazanie: przesunieto wszystkie strzalki o +100 */
    #define KLAWISZ_STRZALKA_W_PRAWO 167
    #define KLAWISZ_STRZALKA_W_GORE 165
    #define KLAWISZ_STRZALKA_W_DOL 166
 #endif
-/* CAPS i SHIFT nie wplywaja na strzalki, na SPACJE, na ENTER i na ESC*/
 #define KLAWISZ_w 119
 #define KLAWISZ_a 97
 #define KLAWISZ_s 115
@@ -153,7 +85,7 @@ endif
 #define KLAWISZ_ESC 27
 
 /*W przypadku kompilacji pod Unix problemem jest brak dostepu do polecen takich jak getch() czy kbhit().
-Aby to rozwiazac wykorzystalem kody, ktorych nie rozumiem, z nastepujacych zrodel:
+Aby to rozwiazac (w ponizszym bloku ifdef) wykorzystalem kody, ktorych nie rozumiem, z nastepujacych zrodel:
 https://stackoverflow.com/questions/7469139/what-is-the-equivalent-to-getch-getche-in-linux
 https://cboard.cprogramming.com/c-programming/63166-kbhit-linux.html
 */
@@ -164,15 +96,15 @@ https://cboard.cprogramming.com/c-programming/63166-kbhit-linux.html
 static struct termios stary, nowy;
 void initTermios(int echo) 
 {
-  tcgetattr(0, &stary); /* grab old terminal i/o settings */
-  nowy = stary; /* make new settings same as old settings */
-  nowy.c_lflag &= ~ICANON; /* disable buffered i/o */
+  tcgetattr(0, &stary);
+  nowy = stary;
+  nowy.c_lflag &= ~ICANON;
   if (echo) {
-      nowy.c_lflag |= ECHO; /* set echo mode */
+      nowy.c_lflag |= ECHO;
   } else {
-      nowy.c_lflag &= ~ECHO; /* set no echo mode */
+      nowy.c_lflag &= ~ECHO;
   }
-  tcsetattr(0, TCSANOW, &nowy); /* use these new terminal i/o settings now */
+  tcsetattr(0, TCSANOW, &nowy);
 }
 char getch(void) 
 {
@@ -211,25 +143,23 @@ void zapisz_uklad(char **T, int xT, int yT, char *awaria);
 void zwolnij_pamiec(char **T, int yT);
 void wypisz_komunikat_o_awarii(char awaria);
 void wypisz_komunikat_zakonczenia();
-int jest4849(char znak);
-char TT(int Xc, int Yc, char **T, int xT, int yT, int x0, int y0); /* odczytuje element tablicy lub pustkê poza ni¹ */
+int jest4849(char znak); /* sprawdza, czy znak jest cyfr¹ 0 lub 1 */
+char TT(int Xc, int Yc, char **T, int xT, int yT, int x0, int y0); /* odczytuje element tablicy ze wspó³rzednych kartezjañskich lub pustkê poza ni¹ */
 int ile_populacja(char **T, int xT, int yT);
 unsigned char nacisniecie_przycisku();
-/*
-NIEPOTRZEBNE (ZREZYGNOWA£EM Z TEJ MECHANIKI TEMPA):
-float tempo(int skala_tempa);
-*/
+/*NIEPOTRZEBNE (ZREZYGNOWA£EM Z TEJ MECHANIKI TEMPA):
+float tempo(int skala_tempa);*/
 void wyswietl(char **T,  int xT, int yT, int x0, int y0, int xkur, int ykur, int tryb_tempa, /*NIEPOTRZEBNE (ZREZYGNOWA£EM Z TEJ MECHANIKI TEMPA):int skala_tempa, */int dystans, int czas);
-void wyczysc();
-char** przydziel_pamiec_tablicy_pomocniczej(int xT, int yT, char *awaria);
+void wyczysc(); /* czyszczenie ekranu */
+char** przydziel_pamiec_tablicy_pomocniczej(int xT, int yT, char *awaria);/*wbrew nazwie funkcja okaza³a siê idealna do tworzenia dowolnych tablic komórek*/
 void zmien_tryb_tempa(int *wsk_tryb_tempa);
 /*NIEPOTRZEBNE (ZREZYGNOWA£EM Z TEJ MECHANIKI TEMPA):void zmien_skale_tempa(int *wsk_skala_tempa);*/
 void zmien_dystans(int *wsk_dystans);
 char** zmniejsz_rozmiar_planszy_maksymalnie(char **D, int *xT, int *yT, int *x0, int *y0, char *awaria);
 /* wywo³anie: T=zmniejsz_rozmiar_planszy_maksymalnie(T,&xT,&yT,&x0,&y0,&awaria)*/
-/* nie zostawia marginesu pustki, te trzy funkcje na pewno nie maja zmienic polozenia kursora, wywolac przed zapisem */
+/* nie zostawia marginesu pustki, te trzy funkcje na pewno nie maja zmienic polozenia kursora*/
 char** zwieksz_rozmiar_planszy(char **D, int *xT, int *yT, int *x0, int *y0, char *awaria, int u, int l, int r, int d);
-/* cztery ostatnie argumenty musza byc dlugosciami, ma nie zostawiac oprocz tego jeszcze marginesu dodawanego - jak go chcesz, to zwieksz argument */
+/* cztery ostatnie argumenty musza byc dlugosciami, ma nie zostawiac oprocz tego jeszcze marginesu dodawanego - jak go chcesz, to zwiêksz argument*/
 char** zmniejsz_rozmiar_planszy(char **D, int *xT, int *yT, int *x0, int *y0, char *awaria);
 /* obcina planszê zostawiaj¹c margines pustki równy marginesowi dodawanemu. Wywo³ywaæ np. co 100 kroków. */
 void zmien_stan_komorki(char ***T, char ***P, int *xT, int *yT, int *x0, int *y0, int xkur, int ykur, char *awaria);
@@ -243,24 +173,22 @@ void wykonaj_krok_2(char ***T, char ***P, int *xT, int *yT, int *x0, int *y0, ch
 
 int main(int agrc, char *argv[])
 {
-	char **T=NULL;
-	char **P=NULL;
+	char **T=NULL; /* g³ówna tablica komórek */
+	char **P=NULL; /* pomocnicza tablica komórek */
 	char awaria=0;
 	unsigned char komunikacja;
 	int xT=0, yT=0, x0=0, y0=0, xkur=0, ykur=0; /* wymiary tablicy, po³o¿enie punktu (0,0) wzglêdem tablicy, po³o¿enie kursora */
 	/* po³o¿enie kursora jest wzgledem kartezjanskich wspolrzednych, x0 i y0 wzgledem tablicy */
 	int tryb_tempa=1, dystans=1, czas=0;
 	/* tryb 0 - szybki, 1 - wolny */
+	/* dystans 1 3 5 10 20 40 */
 	/* NIEPOTRZEBNE (ZREZYGNOWA£EM Z TEJ MECHANIKI TEMPA):int skala_tempa=0;*/
 	/* skala_tempa od -1 (0.5x) do 4 (16x)  */
-	/* dystans 1 3 5 10 20 40 */
 	char ZSD[18]; /* zasady od a0 do d8 */
-	/*
-	NIEPOTRZEBNE (ZREZYGNOWA£EM Z TEJ MECHANIKI TEMPA):
+	/*NIEPOTRZEBNE (ZREZYGNOWA£EM Z TEJ MECHANIKI TEMPA):
 	time_t t1, t2;
 	double deltate, opoznienie;
-	int ile_mikrosekund;
-	*/
+	int ile_mikrosekund;*/
 	
 	wczytaj_zasady(ZSD,&awaria);
 	if (awaria==0)
@@ -271,29 +199,29 @@ int main(int agrc, char *argv[])
 			P=przydziel_pamiec_tablicy_pomocniczej(xT,yT,&awaria);
 			if (awaria==0)
 			{
-				x0=xT/2; /* x0 jest zawsze >=0 (ale tylko na poczatku), bo jest wzgledem tablicy */
-				y0=yT/2; /* y0 jest zawsze >=0 (ale tylko na poczatku), bo jest wzgledem tablicy */
+				x0=xT/2;
+				y0=yT/2;
 				xkur=x0; /* ustawienie kursora na srodek */
-				ykur=y0; /* muszê pamiêtaæ o sytuacji, gdy kursor wykracza poza tablicê - ma to byc dozwolone i obslugiwane - juz zrobilem */
+				ykur=y0;
 				do
 				{
 					wyswietl(T,xT,yT,x0,y0,xkur,ykur,tryb_tempa/*NIEPOTRZEBNE (ZREZYGNOWA£EM Z TEJ MECHANIKI TEMPA):skala_tempa*/,dystans,czas);
 					komunikacja=nacisniecie_przycisku();
 					if (czy_w_lewo(komunikacja))
 					{
-						xkur-=dystans;
+						xkur-=dystans; /*ruch kursora*/
 					}
 					else if (czy_w_prawo(komunikacja))
 					{
-						xkur+=dystans;
+						xkur+=dystans; /*ruch kursora*/
 					}
 					else if (czy_w_gore(komunikacja))
 					{
-						ykur+=dystans;
+						ykur+=dystans; /*ruch kursora*/
 					}
 					else if (czy_w_dol(komunikacja))
 					{
-						ykur-=dystans;
+						ykur-=dystans; /*ruch kursora*/
 					}
 					else if ((komunikacja==KLAWISZ_T) || (komunikacja==KLAWISZ_t))
 					{
@@ -314,7 +242,7 @@ int main(int agrc, char *argv[])
 					}
 					else if (komunikacja==KLAWISZ_ENTER)
 					{
-						komunikacja=KLAWISZ_T; /* ustawienie na dowolne inne makro */
+						komunikacja=KLAWISZ_T; /* ustawienie na dowolne makro inne ni¿ KLAWISZ_ENTER, aby petla do-while siê nie zakonczyla natychmiast */
 						if (!tryb_tempa)
 						{
 							wyczysc();
@@ -331,11 +259,16 @@ int main(int agrc, char *argv[])
 							opoznienie=(double)tempo(skala_tempa);
 							ile_mikrosekund=(int)(1000000.0*((opoznienie-deltate)>0.0)?(opoznienie-deltate):(0.0));
 							ifdef STWIERDZONO_WINDOWS
-								include "kod_dodatkowy2.c"
+								Sleep(ile_mikrosekund/1000);
 							endif
 	
 							ifdef STWIERDZONO_UNIX
-								include "kod_dodatkowy1.c"
+								while (ile_mikrosekund>=1000000)
+								{
+									usleep(999999);
+									ile_mikrosekund-=1000000;
+								}
+								usleep(ile_mikrosekund);
 							endif
 							*/
 							if (kbhit())
@@ -347,19 +280,19 @@ int main(int agrc, char *argv[])
 								}
 								else if (czy_w_lewo(komunikacja))
 								{
-									xkur-=dystans;
+									xkur-=dystans; /*ruch kursora w trakcie dzia³ania automatu komórkowego*/
 								}
 								else if (czy_w_prawo(komunikacja))
 								{
-									xkur+=dystans;
+									xkur+=dystans; /*ruch kursora w trakcie dzia³ania automatu komórkowego*/
 								}
 								else if (czy_w_gore(komunikacja))
 								{
-									ykur+=dystans;
+									ykur+=dystans; /*ruch kursora w trakcie dzia³ania automatu komórkowego*/
 								}
 								else if (czy_w_dol(komunikacja))
 								{
-									ykur-=dystans;
+									ykur-=dystans; /*ruch kursora w trakcie dzia³ania automatu komórkowego*/
 								}
 							}
 						} while (komunikacja!=KLAWISZ_ENTER && awaria==0);
@@ -401,7 +334,6 @@ int main(int agrc, char *argv[])
 
 void wczytaj_zasady(char ZSD[], char *awaria)
 {
-	/* funkcja zostala przetestowana i dziala swietnie */
 	int i=0;
 	FILE *plik_zasad=NULL;
 	char znak[3]={48,48,48};
@@ -436,7 +368,6 @@ void wczytaj_zasady(char ZSD[], char *awaria)
 
 char** wczytaj_uklad(int *xT, int *yT, char *awaria)
 {
-	/* funkcja zostala przetestowana i dziala swietnie */
 	char **D=NULL;
 	int i, x, y, przydzial_udany=1;
 	int dlugosc_linii=-1, dlugosc_pliku=0;
@@ -486,6 +417,7 @@ char** wczytaj_uklad(int *xT, int *yT, char *awaria)
 		{
 			*awaria=33;
 		}
+		fclose(plik_danych);
 	}
 	else
 	{
@@ -496,7 +428,6 @@ char** wczytaj_uklad(int *xT, int *yT, char *awaria)
 
 void zapisz_uklad(char **T, int xT, int yT, char *awaria)
 {
-	/* naprawiono i przetestowano - poprzednio odwraca³a wzglêdem OX */
 	int x, y;
 	FILE *plik_wyjsciowy=NULL;
 	char znak;
@@ -509,8 +440,9 @@ void zapisz_uklad(char **T, int xT, int yT, char *awaria)
 			{
 				fputc(48+(*(*(T+y)+x)),plik_wyjsciowy);
 			}
-			fputc('\n',plik_wyjsciowy); /* na wiki pisza, ze \n samo sie zmieni na \r\n pod Windows, Linux - \n dziala najzwyczajniej */
+			fputc('\n',plik_wyjsciowy);
 		}
+		fclose(plik_wyjsciowy);
 	}
 	else
 	{
@@ -520,7 +452,7 @@ void zapisz_uklad(char **T, int xT, int yT, char *awaria)
 
 void zwolnij_pamiec(char **T, int yT)
 {
-	/* UWAGA! Funkcja nie zeruje wskaznika z innej funkcji, bo jest on przekazany przez wartosc.*/
+	/* UWAGA! Ta funkcja nie zeruje wskaznika z innej funkcji, bo jest on przekazany przez wartosc.*/
 	int i;
 	if (T!=NULL)
 	{
@@ -612,15 +544,15 @@ unsigned char nacisniecie_przycisku()
 	unsigned char klawisz;
     fflush(stdin);
     klawisz=getch();
-    if (klawisz==KLAWISZ_ESC && kbhit()) klawisz=getch(); /* wykombinowalem polaczenie na oba systemy*/
+    if (klawisz==KLAWISZ_ESC && kbhit()) klawisz=getch();
 	
 	if (klawisz==KLAWISZ_STRZALKI)
     {
         klawisz=getch();
-	if (klawisz==(KLAWISZ_STRZALKA_W_GORE-100)) klawisz+=100; 
-	if (klawisz==(KLAWISZ_STRZALKA_W_LEWO-100)) klawisz+=100;
-	if (klawisz==(KLAWISZ_STRZALKA_W_PRAWO-100)) klawisz+=100; 
-	if (klawisz==(KLAWISZ_STRZALKA_W_DOL-100)) klawisz+=100;
+		if (klawisz==(KLAWISZ_STRZALKA_W_GORE-100)) klawisz+=100; 
+		if (klawisz==(KLAWISZ_STRZALKA_W_LEWO-100)) klawisz+=100;
+		if (klawisz==(KLAWISZ_STRZALKA_W_PRAWO-100)) klawisz+=100; 
+		if (klawisz==(KLAWISZ_STRZALKA_W_DOL-100)) klawisz+=100;
         fflush(stdin);
 	}
 	return klawisz;
@@ -653,7 +585,6 @@ float tempo(int skala_tempa)
 
 void wyswietl(char **T, int xT, int yT, int x0, int y0, int xkur, int ykur, int tryb_tempa, int dystans, int czas)
 {
-	/* chyba dzia³a œwetnie */
 	int i, j, imin, imax, jmin, jmax, pomx, pomy;
 	/* kursor wzgledem ekranu jest na: (30, 30) */
 	pomx=(x_ekran-1)/2;
@@ -714,7 +645,6 @@ void wyczysc()
 
 char** przydziel_pamiec_tablicy_pomocniczej(int xT, int yT, char *awaria)
 {
-	/* na testach zdaje siê dzia³aæ dobrze */
 	char **P=NULL;
 	int i, j, przydzial_udany=1;
 	P=malloc(yT*sizeof(char*));
@@ -779,7 +709,6 @@ void zmien_dystans(int *wsk_dystans)
 
 char** zmniejsz_rozmiar_planszy_maksymalnie(char **D, int *xT, int *yT, int *x0, int *y0, char *awaria)
 {
-	/* przetestowana, prawopodobnie bezb³êdna */
 	int wciecie_u=0, wciecie_d=0, wciecie_l=0, wciecie_r=0;
 	int i, j, logika, stareyT;
 	char **N=NULL;
@@ -872,7 +801,6 @@ char** zmniejsz_rozmiar_planszy_maksymalnie(char **D, int *xT, int *yT, int *x0,
 
 char** zwieksz_rozmiar_planszy(char **D, int *xT, int *yT, int *x0, int *y0, char *awaria, int u, int l, int r, int d)
 {
-	/* przetestowana, œwietnie dzia³a */
 	int i, j, stareyT=(*yT);
 	char **N=NULL;
 	N=przydziel_pamiec_tablicy_pomocniczej((*xT)+l+r,(*yT)+u+d,awaria);
@@ -907,8 +835,7 @@ char** zmniejsz_rozmiar_planszy(char **D, int *xT, int *yT, int *x0, int *y0, ch
 void zmien_stan_komorki(char ***T, char ***P, int *xT, int *yT, int *x0, int *y0, int xkur, int ykur, char *awaria)
 {
 	/* *(*(*T+y)+x) */
-	
-	/* prostokat: (-x0,-y0) w kartez. lewy dolny róg prostok¹ta, a prawy górny (-x0+xT-1,-y0+yT-1) */
+	/* prostok¹t: (-x0,-y0) w kartez. lewy dolny róg prostok¹ta, a prawy górny (-x0+xT-1,-y0+yT-1) */
 	int stareyT, dokonano_zmiany=0;
 	stareyT=(*yT);
 	
