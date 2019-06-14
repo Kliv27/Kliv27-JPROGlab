@@ -189,6 +189,7 @@ int main(int agrc, char *argv[])
 	time_t t1, t2;
 	double deltate, opoznienie;
 	int ile_mikrosekund;*/
+	int stareyT;
 	
 	wczytaj_zasady(ZSD,&awaria);
 	if (awaria==0)
@@ -298,6 +299,7 @@ int main(int agrc, char *argv[])
 						} while (komunikacja!=KLAWISZ_ENTER && awaria==0);
 					}
 				} while (komunikacja!=KLAWISZ_ESC && awaria==0);
+				stareyT=yT;
 				if (awaria==0) T=zmniejsz_rozmiar_planszy_maksymalnie(T,&xT,&yT,&x0,&y0,&awaria);
 				if (awaria==0)
 				{
@@ -312,7 +314,7 @@ int main(int agrc, char *argv[])
 					wypisz_komunikat_o_awarii(awaria);
 				}
 				zwolnij_pamiec(T,yT);
-				zwolnij_pamiec(P,yT);
+				zwolnij_pamiec(P,stareyT);
 			}
 			else
 			{

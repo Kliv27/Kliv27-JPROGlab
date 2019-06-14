@@ -14,7 +14,7 @@ W trakcie dzia³ania programu mo¿liwe jest modyfikowanie stanu aktualnego przy po
 
 INSTALACJA:
 	Pod systemem Windows:
-1. Dokonaj kompilacji kodu Ÿród³owego zawartego w pliku main.c za pomoc¹ kompilatora jêzyka C. Mo¿e to byæ np. kompilator wewn¹trz œrodowiska programistycznego. Je¿eli je¿eli nie masz takiego oprogramowania, to je pobierz (istniej¹ darmowe programy).
+1. Dokonaj kompilacji kodu Ÿród³owego zawartego w pliku main.c za pomoc¹ kompilatora jêzyka C. Mo¿e to byæ np. kompilator wewn¹trz œrodowiska programistycznego. Je¿eli nie masz takiego oprogramowania, to je pobierz (istniej¹ darmowe programy).
 2. Powstanie plik .exe, który zasadniczo powinien byæ uruchamiany tylko na sprzêcie, na którym nast¹pi³a kompilacja. Umieœæ ten plik w jednym folderze wraz z plikami a.txt, zasady.txt i out.txt.
 3. Je¿eli nie posiadasz tych plików, stwórz je wed³ug wzorów ich zawartoœci, które mo¿esz znaleŸæ w dalszej czêœci tego pliku informacyjnego.
 4. Plik wykonywalny (.exe) jest gotowy do uruchomienia.
